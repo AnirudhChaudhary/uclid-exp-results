@@ -1,0 +1,59 @@
+module TrafficLight {
+  var count: integer;
+  var pedestrian: boolean;
+  var sigG: bv2;
+  var sigR: bv4;
+  var sigY: bv3;
+  var state: record { RED: bv2, ??: bv2, ??: bv2, ??: bv2, GREEN: bv2, YELLOW: bv2, PENDING: bv2, RED: record {  }, GREEN: bv2, YELLOW: bv2, PENDING: bv2, RED: record { RED: record {  }, GREEN: bv2, YELLOW: bv2, PENDING: bv2 } };
+
+  init {
+    state = state.RED; 
+    sigG = 0bv2; 
+    sigY = 0bv3; 
+    sigR = 1bv4; 
+    pedestrian = false; 
+    count = 0;
+
+  }
+  next {
+    if (count == 60) {
+      if (state == state.RED) {
+        state' = state.GREEN; 
+        sigG' = 1bv2; 
+        sigY' = 0bv3; 
+        sigR' = 0bv4; 
+        count' = 0; 
+      } else {
+        if ((state == state.GREEN) && pedestrian) {
+          count' = 0; 
+        } else {
+          if (state == state.GREEN) {
+            state' = state.PENDING; 
+          } else {
+            if ((state == state.PENDING) && pedestrian) {
+              state' = state.YELLOW; 
+              sigG' = 0bv2; 
+              sigY' = 1bv3; 
+              sigR' = 0bv4; 
+              count' = 0; 
+            } else {
+              if (state == state.PENDING) {
+                count' = 0; 
+              } else {
+                if (state == state.YELLOW) {
+                  state' = state.RED; 
+                  sigG' = 0bv2; 
+                  sigY' = 0bv3; 
+                  sigR' = 1bv4; 
+                  count' = 0; 
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      count' = (count + 1); 
+    }
+  }
+}
