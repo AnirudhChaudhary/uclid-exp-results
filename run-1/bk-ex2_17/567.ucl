@@ -1,0 +1,4 @@
+module TrafficLight {
+  var red: boolean;
+  var green: boolean;
+}
