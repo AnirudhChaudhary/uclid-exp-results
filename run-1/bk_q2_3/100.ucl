@@ -1,0 +1,88 @@
+Consider a street junction with 4 incoming roads. Each of the 4 roads has a traffic light, which are L1, L2, L3, L4.
+The traffic light has 4 states: green, yellow, red, and amber which happen in that order.
+
+Write a model of this junction with 4 traffic lights, showing a reasonable controller C that switches the green traffic lights in the following order: L1 and L3 together, then L2, then L4.
+
+Use the variable names L1, L2, L3, L4, green, yellow, red, amber
+
+
+module TrafficLights {
+  var L1: enum { amber, green, red, yellow };
+  var L2: enum { amber, green, red, yellow };
+  var L3: enum { amber, green, red, yellow };
+  var L4: enum { amber, green, red, yellow };
+  var controller: integer;
+  var timer: integer;
+
+  init {
+    controller = 1; 
+    timer = 0; 
+
+  }
+  next {
+    if (controller == 1) {
+      if (timer == 0) {
+        L1' = green; 
+        L3' = green; 
+      } else {
+        if (timer == 2) {
+          L1' = yellow; 
+          L3' = yellow; 
+        } else {
+          if (timer == 3) {
+            L1' = red; 
+            L3' = red; 
+          } else {
+            if (timer == 4) {
+              L1' = amber; 
+              L3' = amber; 
+              controller' = 2; 
+              timer' = 0; 
+            }
+          }
+        }
+      }
+    } else {
+      if (controller == 2) {
+        if (timer == 0) {
+          L2' = green; 
+        } else {
+          if (timer == 2) {
+            L2' = yellow; 
+          } else {
+            if (timer == 3) {
+              L2' = red; 
+            } else {
+              if (timer == 4) {
+                L2' = amber; 
+                controller' = 3; 
+                timer' = 0; 
+              }
+            }
+          }
+        }
+      } else {
+        if (controller == 3) {
+          if (timer == 0) {
+            L4' = green; 
+          } else {
+            if (timer == 2) {
+              L4' = yellow; 
+            } else {
+              if (timer == 3) {
+                L4' = red; 
+              } else {
+                if (timer == 4) {
+                  L4' = amber; 
+                  controller' = 1; 
+                  timer' = 0; 
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    timer' = (timer + 1); 
+  }
+}

@@ -1,0 +1,35 @@
+Model a beverage vending machine which dispenses drinks on receipt of coins.
+
+Add a safety property that checks that the number of inserted coins is always at least the number of dispensed drinks. You may add auxiliary variables.
+
+Use the variable names coin and dispensed_drinks
+
+
+module BeverageVendingMachine {
+  var coin: integer;
+  var dispensed_drinks: integer;
+  var inserted_coins: integer;
+
+  init {
+    coin = 0; 
+    dispensed_drinks = 0; 
+    inserted_coins = 0; 
+
+  }
+  procedure step()
+    modifies inserted_coins;
+  {
+    if (coin > 0) {
+      inserted_coins = (inserted_coins + coin); 
+    }
+    if (dispensed_drinks > 0) {
+      if (inserted_coins >= dispensed_drinks) {
+        inserted_coins = (inserted_coins - dispensed_drinks); 
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

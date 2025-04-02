@@ -1,0 +1,90 @@
+Consider the intersection of two one-way streets, called Main and Secondary.
+A light on each street controls its traffic. Each light goes through a cycle consisting of a red (R), green (G), and yellow (Y) phases.
+
+It is a safety requirement that when one light is in its green or yellow phase, the other is in its red phase. The yellow phase is always 5 seconds long.
+
+The traffic lights operate as follows.
+A sensor in the secondary road detects a vehicle. While no vehicle is detected, there is a 4 minute-long cycle with the main light having 3 minutes of green, 5 seconds of yellow, and 55 seconds of red. The secondary light is red for 3 minutes and 5 seconds (while the main light is green and yellow), green for 50 seconds, then yellow for 5 seconds.
+
+If a vehicle is detected on the secondary road, the traffic light quickly gives a right of way to the secondary road. When this happens, the main light aborts its green phase and immediately switches to its 5 second yellow phase. If the vehicle is detected while the main light is yellow or red, the system continues as if there were no vehicle.
+
+Model a system that controls the lights. Let this system have six pure outputs, one for each light, named mG, mY, and mR, to designate the main light being green, yellow, or red, respectively, and sG, sY, and sR, to designate the secondary light being green, yellow, or red, respectively. These signals should be generated to turn on a light. You can implicitly assume that when one light is turned on, whichever has been on is turned off.
+
+Use the variable names mG, mY, mR, sG, sY, sR.
+
+
+module TrafficLights {
+  var State: bv3;
+  var main_timer: bv16;
+  var secondary_detector: bv1;
+  var secondary_light_timer: bv8;
+
+  output mG: boolean;
+  output mY: boolean;
+  output mR: boolean;
+  output sG: boolean;
+  output sY: boolean;
+  output sR: boolean;
+
+  init {
+    State = 0bv3; 
+    main_timer = 240bv16; 
+    secondary_detector = 0bv1; 
+    secondary_light_timer = 185bv8; 
+
+  }
+  procedure step()
+    modifies mY;
+    modifies sY;
+    modifies secondary_light_timer;
+    modifies mG;
+    modifies mR;
+    modifies main_timer;
+    modifies sG;
+    modifies sR;
+    modifies State;
+  {
+    if (secondary_light_timer == 0bv8) {
+      secondary_light_timer = 55bv8; 
+      State = 2bv3; 
+      if (secondary_detector == 0bv1) {
+        State = 2bv3; 
+      }
+    } else {
+      secondary_light_timer = (secondary_light_timer - 1bv8); 
+    }
+    if (main_timer == 0bv16) {
+      main_timer = 240bv16; 
+      if ((secondary_detector == 1bv1) && (State == 0bv3)) {
+        State = 5bv3; 
+      } else {
+        if (State == 5bv3) {
+          State = 1bv3; 
+        } else {
+          if (State == 1bv3) {
+            State = 0bv3; 
+          } else {
+            if (State == 4bv3) {
+              State = 0bv3; 
+            }
+          }
+        }
+      }
+      if (State != 0bv3) {
+        State = 0bv3; 
+      }
+    } else {
+      main_timer = (main_timer - 1bv16); 
+    }
+    mG = (State == 0bv3); 
+    mY = (State == 1bv3); 
+    mR = (State == 2bv3); 
+    sG = (State == 4bv3); 
+    sY = (State == 7bv3); 
+    sR = (State == 0bv3); 
+  }
+
+  next {
+    call step();
+  }
+}

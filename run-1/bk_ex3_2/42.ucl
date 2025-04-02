@@ -1,0 +1,27 @@
+Build a model for the classic dining philosophers problem:
+
+Five philosophers are sitting at a round table with a bowl of rice in the middle. For the philosophers (being a little unworldly) life consists of thinking and eating (and waiting, as we will see). To take some rice out of the bowl, a philosopher needs two chopsticks. In between two neighboring philosophers, however, there is only a single chopstick. Thus, at any time only one of two neighboring philosophers can eat. Of course, the use of the chopsticks is exclusive and eating with hands is forbidden.
+
+
+Write a property that checks whether deadlock is possible.
+
+Use the variable names phil1, phil2, phil3, phil4, phil5, chopstick1, chopstick2, chopstick3, chopstick4, and chopstick5
+
+
+module DiningPhilosophers {
+  var phil1_has_both_chopsticks: boolean;
+  var phil2_has_both_chopsticks: boolean;
+  var phil3_has_both_chopsticks: boolean;
+  var phil4_has_both_chopsticks: boolean;
+  var phil5_has_both_chopsticks: boolean;
+
+  next {
+    phil1_has_both_chopsticks' = phil5_has_both_chopsticks; 
+    phil2_has_both_chopsticks' = phil1_has_both_chopsticks; 
+    phil3_has_both_chopsticks' = phil2_has_both_chopsticks; 
+    phil4_has_both_chopsticks' = phil3_has_both_chopsticks; 
+    phil5_has_both_chopsticks' = phil4_has_both_chopsticks; 
+
+  }
+  invariant spec: !((((phil1_has_both_chopsticks && phil2_has_both_chopsticks) && phil3_has_both_chopsticks) && phil4_has_both_chopsticks) && phil5_has_both_chopsticks);
+}

@@ -1,0 +1,34 @@
+Build a model for the parallel composition of two transition systems modelling the behaviour of traffic lights at two intersection roads.
+
+Each traffic light can show either red or green. Both traffic lights synchronize by means of the actions A and B that indicate the change of light, e.g., action A indicates that traffic light 1 transitions from red to green, and that traffic light two transitions from green to red.
+
+Check whether it is possible for the traffic lights to deadlock.
+
+Use the variable names traffic_light1, traffic_light2, green1, red1, green2, red2.
+
+
+module TrafficLights {
+  var green1: boolean;
+  var green2: boolean;
+  var red1: boolean;
+  var red2: boolean;
+
+  init {
+    green1 = false; 
+    red1 = true; 
+    green2 = true; 
+    red2 = false; 
+
+  }
+  next {
+    if ((green1 == false) && (red1 == true)) {
+      green1' = true; 
+      red1' = false; 
+    }
+    if ((green2 == true) && (red2 == false)) {
+      green2' = false; 
+      red2' = true; 
+    }
+
+  }
+}

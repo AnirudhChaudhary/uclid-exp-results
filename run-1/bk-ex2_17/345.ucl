@@ -1,4 +1,0 @@
-module TrafficLight {
-  var green: boolean;
-  var red: boolean;
-}

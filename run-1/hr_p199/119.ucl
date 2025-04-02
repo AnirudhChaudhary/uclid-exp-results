@@ -1,0 +1,36 @@
+You may recall the puzzle of a ferryman, goat, cabbage, and wolf all on one side of a river. The ferryman can cross the river with at most one passenger in his boat. There is a behavioural conflict between:
+1. the goat and the cabbage; and
+2. the goat and the wolf;
+if they are on the same river bank but the ferryman crosses the river or stays on the other bank.
+
+We wish to know how the ferryman can transport all goods to the other side, without any conflicts occurring.
+
+Build a model in which the states represent which goods are at which side of the river. Your model will need to have variables representing the location of the ferryman, the goat, the cabbage and the wolf and a variable that indicates what is being carried in the ferry.
+
+Define a goal state in which all goods are on the other side of the river. Write a property which checks whether this goal state is reachable without any conflicts occurring.
+
+Use the variable names ferryman, goat, cabbage, wolf and carry.
+
+
+module Module {
+  var carry_anything: bv4;
+  var ferryman: bv2;
+  var goat: bv4;
+  var cabbage: bv4;
+  var wolf: bv4;
+  var carry: bv4;
+
+  init {
+    ferryman = 0bv2; 
+    goat = 2bv4; 
+    cabbage = 4bv4; 
+    wolf = 8bv4; 
+    carry = 0bv4; 
+
+  }
+  next {
+    carry_anything' = (if (ferryman == 0bv2) then wolf else (if (ferryman == 2bv2) then cabbage else goat)); 
+
+  }
+  invariant spec: ((((goat == 0bv4) && (cabbage == 0bv4)) && (wolf == 0bv4)) && (ferryman == 0bv2));
+}

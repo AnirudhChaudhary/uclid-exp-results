@@ -1,0 +1,60 @@
+Model a preliminary design of a beverage vending machine. The machine can either deliver beer or soda.
+
+The state space is S = { pay , select , soda , beer }. The set of initial states consists of only one state, i.e., I = { pay }. The (user) action insert coin denotes the insertion of a coin, while the (machine) actions get soda and get beer denote the delivery of soda and beer, respectively.
+
+Use the variable names pay, select, soda and beer.
+
+Write an LTL property that checks that the vending machine only delivers a drink after being provided with a coin. You may introduce auxiliary variables to do this if you need to.
+
+
+module BeverageVendingMachine {
+  var state: enum { beer, pay, select, soda };
+  var coin_inserted: boolean;
+  var drink_delivered: boolean;
+
+  init {
+    state = pay; 
+    coin_inserted = false; 
+    drink_delivered = false; 
+
+  }
+  next {
+    if (state == pay) {
+      if (coin_inserted) {
+        state' = select; 
+      }
+    } else {
+      if (state == select) {
+        if (coin_inserted) {
+          if (drink_delivered) {
+            drink_delivered' = false; 
+          } else {
+            state' = soda; 
+          }
+        } else {
+          state' = pay; 
+        }
+      } else {
+        if (state == soda) {
+          if (drink_delivered) {
+            drink_delivered' = false; 
+          } else {
+            state' = beer; 
+          }
+        } else {
+          if (state == beer) {
+            if (drink_delivered) {
+              drink_delivered' = false; 
+            } else {
+              state' = beer; 
+            }
+          }
+        }
+      }
+    }
+
+  }
+  invariant state_inv : ((state == soda) ==> coin_inserted);
+  invariant coin_inserted_inv : (coin_inserted ==> (state == select));
+  invariant drink_delivered_inv : (drink_delivered ==> ((state == soda) || (state == beer)));
+}

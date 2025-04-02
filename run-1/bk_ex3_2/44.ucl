@@ -1,0 +1,34 @@
+Build a model for the classic dining philosophers problem:
+
+Five philosophers are sitting at a round table with a bowl of rice in the middle. For the philosophers (being a little unworldly) life consists of thinking and eating (and waiting, as we will see). To take some rice out of the bowl, a philosopher needs two chopsticks. In between two neighboring philosophers, however, there is only a single chopstick. Thus, at any time only one of two neighboring philosophers can eat. Of course, the use of the chopsticks is exclusive and eating with hands is forbidden.
+
+
+Write a property that checks whether deadlock is possible.
+
+Use the variable names phil1, phil2, phil3, phil4, phil5, chopstick1, chopstick2, chopstick3, chopstick4, and chopstick5
+
+
+module Module {
+  var chopstick1: enum { eating, free, taken };
+  var chopstick2: enum { eating, free, taken };
+  var chopstick3: enum { eating, free, taken };
+  var chopstick4: enum { eating, free, taken };
+  var chopstick5: enum { eating, free, taken };
+  var phil1: enum { eating, free, taken };
+  var phil2: enum { eating, free, taken };
+  var phil3: enum { eating, free, taken };
+  var phil4: enum { eating, free, taken };
+  var phil5: enum { eating, free, taken };
+
+  invariant phil1_inv : !((phil1 == eating) && ((chopstick1 == taken) && (chopstick5 == taken)));
+  invariant phil2_inv : !((phil2 == eating) && ((chopstick2 == taken) && (chopstick1 == taken)));
+  invariant phil3_inv : !((phil3 == eating) && ((chopstick3 == taken) && (chopstick2 == taken)));
+  invariant phil4_inv : !((phil4 == eating) && ((chopstick4 == taken) && (chopstick3 == taken)));
+  invariant phil5_inv : !((phil5 == eating) && ((chopstick5 == taken) && (chopstick4 == taken)));
+  invariant chopstick1_inv : ((chopstick1 == free) || (chopstick1 == taken));
+  invariant chopstick2_inv : ((chopstick2 == free) || (chopstick2 == taken));
+  invariant chopstick3_inv : ((chopstick3 == free) || (chopstick3 == taken));
+  invariant chopstick4_inv : ((chopstick4 == free) || (chopstick4 == taken));
+  invariant chopstick5_inv : ((chopstick5 == free) || (chopstick5 == taken));
+
+}

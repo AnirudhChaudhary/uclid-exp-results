@@ -1,0 +1,79 @@
+You may recall the puzzle of a ferryman, goat, cabbage, and wolf all on one side of a river. The ferryman can cross the river with at most one passenger in his boat. There is a behavioural conflict between:
+1. the goat and the cabbage; and
+2. the goat and the wolf;
+if they are on the same river bank but the ferryman crosses the river or stays on the other bank.
+
+We wish to know how the ferryman can transport all goods to the other side, without any conflicts occurring.
+
+Build a model in which the states represent which goods are at which side of the river. Your model will need to have variables representing the location of the ferryman, the goat, the cabbage and the wolf and a variable that indicates what is being carried in the ferry.
+
+Define a goal state in which all goods are on the other side of the river. Write a property which checks whether this goal state is reachable without any conflicts occurring.
+
+Use the variable names ferryman, goat, cabbage, wolf and carry.
+
+
+module FerryPuzzle {
+  var cabbage: boolean;
+  var carry: boolean;
+  var ferryman: boolean;
+  var goat: boolean;
+  var move: boolean;
+  var wolf: boolean;
+
+  init {
+    ferryman = true; 
+    goat = true; 
+    cabbage = true; 
+    wolf = true; 
+    carry = false; 
+
+  }
+  procedure step()
+    modifies move;
+    modifies ferryman;
+    modifies goat;
+    modifies carry;
+  {
+    if (carry == true) {
+      if (ferryman == true) {
+        carry = goat; 
+        goat = !goat; 
+      } else {
+        move = false; 
+        if ((goat == cabbage) && (goat != ferryman)) {
+          move = true; 
+        }
+        if ((goat == wolf) && (goat != ferryman)) {
+          move = true; 
+        }
+        if (move) {
+          carry = goat; 
+          goat = !goat; 
+        }
+      }
+    } else {
+      if (ferryman == true) {
+        carry = !carry; 
+      }
+    }
+    ferryman = !ferryman; 
+  }
+
+  next {
+    call step();
+  }
+  invariant conflict_free_inv : ((ferryman == goat) ==> !((goat == cabbage) && (goat == wolf)));
+  invariant move_inv : ((move == false) || (move == true));
+  invariant goal_state_inv : ((wolf == true) && ((cabbage == true) && ((ferryman == false) && (goat == false))));
+  invariant conflict_free_transport_inv : !(((ferryman == goat) && (goat == cabbage)) || ((ferryman == goat) && (goat == wolf)));
+  invariant ferryman_inv : ((ferryman == false) && (ferryman == true));
+  invariant goat_inv : ((goat == false) && (goat == true));
+  invariant cabbage_inv : ((cabbage == false) && (cabbage == true));
+  invariant wolf_inv : ((wolf == false) && (wolf == true));
+  invariant carry_inv : ((carry == false) && (carry == true));
+  invariant _inv1 : (((carry == goat) || (carry == cabbage)) || (carry == wolf));
+  invariant _inv2 : ((ferryman == false) ==> ((goat == carry) || ((cabbage == carry) || (wolf == carry))));
+  invariant _inv3 : ((ferryman == false) ==> (ferryman == carry));
+  invariant _inv4 : !conflict_free_inv;
+  invariant _inv5 : !conflict_free_transport_inv;
+}

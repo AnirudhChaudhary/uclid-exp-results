@@ -1,0 +1,36 @@
+Consider a stack of nonnegative integers with capacity n (for some fixed n).
+
+Model a transition system representation of this stack. You may abstract from the values on
+the stack and use the operations top, pop, and push with their usual meaning.
+
+Use the variable name s for the stack.
+
+
+module Module {
+  var s: [integer]n;
+  var index: integer;
+  var top_value: integer;
+
+  init {
+    index = 0; 
+    top_value =  -1; 
+
+  }
+  procedure step()
+    modifies index;
+    modifies top_value;
+  {
+    index = (index + 1); 
+    if (index < n) {
+      if (index > 0) {
+        top_value = s[(index - 1)]; 
+      } else {
+        index = (index - 1); 
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+}

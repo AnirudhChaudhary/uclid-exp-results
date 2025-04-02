@@ -1,0 +1,114 @@
+You may recall the puzzle of a ferryman, goat, cabbage, and wolf all on one side of a river. The ferryman can cross the river with at most one passenger in his boat. There is a behavioural conflict between:
+1. the goat and the cabbage; and
+2. the goat and the wolf;
+if they are on the same river bank but the ferryman crosses the river or stays on the other bank.
+
+We wish to know how the ferryman can transport all goods to the other side, without any conflicts occurring.
+
+Build a model in which the states represent which goods are at which side of the river. Your model will need to have variables representing the location of the ferryman, the goat, the cabbage and the wolf and a variable that indicates what is being carried in the ferry.
+
+Define a goal state in which all goods are on the other side of the river. Write a property which checks whether this goal state is reachable without any conflicts occurring.
+
+Use the variable names ferryman, goat, cabbage, wolf and carry.
+
+
+module FerryPuzzle {
+  type Location = integer;
+  type Goods = integer;
+  type Carried = integer;
+
+  var else_: integer;
+  var cabbage_inv: boolean;
+  var ferryman_inv: boolean;
+  var goal_cabbage_inv: boolean;
+  var goal_carry_inv: boolean;
+  var goal_ferryman_inv: boolean;
+  var goal_goat_inv: boolean;
+  var goal_wolf_inv: boolean;
+  var goat_inv: boolean;
+  var wolf_inv: boolean;
+  var ferryman: Location;
+  var goat: Goods;
+  var cabbage: Goods;
+  var wolf: Goods;
+  var carry: Carried;
+  var goal_ferryman: Location;
+  var goal_goat: Goods;
+  var goal_cabbage: Goods;
+  var goal_wolf: Goods;
+  var goal_carry: Carried;
+
+  init {
+    ferryman = 0; 
+    goat = 0; 
+    cabbage = 0; 
+    wolf = 0; 
+    carry = 0; 
+    goal_ferryman = 1; 
+    goal_goat = 1; 
+    goal_cabbage = 1; 
+    goal_wolf = 1; 
+    goal_carry = 0; 
+
+  }
+  next {
+    if (carry == 0) {
+      if (ferryman == 0) {
+        if (((goat == 0) && (cabbage == 0)) || ((goat == 0) && (wolf == 0))) {
+          ferryman' = 1; 
+          carry' = 1; 
+        }
+      } else {
+        if ((goat == 0) && (wolf == 0)) {
+          ferryman' = 1; 
+          goat' = 1; 
+          wolf' = 1; 
+          carry' = 1; 
+        } else {
+          if ((goat == 0) && (cabbage == 0)) {
+            ferryman' = 1; 
+            cabbage' = 1; 
+            carry' = 1; 
+          }
+        }
+      }
+      else_' = 0; 
+      carry' = 0; 
+    } else {
+      if (carry == 0) {
+        if (ferryman == 0) {
+          ferryman' = 1; 
+          wolf' = 1; 
+          carry' = 1; 
+        }
+      } else {
+        if (carry == 0) {
+          if (ferryman == 0) {
+            ferryman' = 1; 
+            goat' = 1; 
+            carry' = 1; 
+          }
+        } else {
+          if (carry == 0) {
+            if (ferryman == 0) {
+              ferryman' = 1; 
+              cabbage' = 1; 
+              carry' = 1; 
+            }
+          }
+        }
+      }
+    }
+
+  }
+  invariant ferryman_inv : ((ferryman == 0) && (ferryman == 1));
+  invariant goat_inv : ((goat == ferryman) || ((goat != ferryman) && ((goat == cabbage) && (goat == wolf))));
+  invariant cabbage_inv : ((cabbage == ferryman) || ((cabbage != ferryman) && (goat == cabbage)));
+  invariant wolf_inv : ((wolf == ferryman) || ((wolf != ferryman) && (goat == wolf)));
+  invariant carry_inv : (carry <= 1);
+  invariant goal_ferryman_inv : (goal_ferryman == 1);
+  invariant goal_goat_inv : (goal_goat == 1);
+  invariant goal_cabbage_inv : (goal_cabbage == 1);
+  invariant goal_wolf_inv : (goal_wolf == 1);
+  invariant goal_carry_inv : (goal_carry == 0);
+}

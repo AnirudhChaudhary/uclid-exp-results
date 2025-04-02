@@ -1,0 +1,56 @@
+The alternating bit protocol (ABP) is a protocol for transmitting messages along a 'lossy line,' i.e., a line which may lose or duplicate messages. The protocol guarantees that, providing the line doesn't lose infinitely many messages, communication between the sender and the receiver will be successful. (We allow the line to lose or duplicate messages, but it may not corrupt messages; however, there is no way of guaranteeing successful transmission along a line which can corrupt.)
+
+The ABP works as follows. There are four entities, or agents: the sender, the receiver, the message channel and the acknowledgement channel. The sender transmits the first part of the message together with the 'control' bit 0. If, and when, the receiver receives a message with the control bit 0, it sends 0 along the acknowledgement channel. When the sender receives this acknowledgement, it sends the next packet with the control bit 1. If and when the receiver receives this, it acknowledges by sending a 1 on the acknowledgement channel. By alternating the control bit, both receiver and sender can guard against duplicating messages and losing messages (i.e., they ignore messages that have the unexpected control bit).
+If the sender doesn't get the expected acknowledgement, it continually re-sends the message, until the acknowledgement arrives. If the receiver doesn't get a message with the expected control bit, it continually resends the previous acknowledgement.
+
+Write a model for the alternating bit protocol. Write a set of properties that check that your model behaves as described above.
+
+Use the variable names st, message1, message2 and ack.
+
+
+module AlternatingBitProtocol {
+  type Bit = boolean;
+  type control_ = Bit;
+
+  var st: control_;
+  var message1: control_;
+  var message2: control_;
+  var ack: control_;
+
+  init {
+    ack = message1; 
+    message1 = false; 
+    message2 = false; 
+    ack = false; 
+    st = true; 
+
+  }
+  next {
+    ack' = ((message2 && !st) || ack); 
+    if (st) {
+      if (message1) {
+        st' = true; 
+        message1' = false; 
+      } else {
+        st' = false; 
+        message1' = true; 
+      }
+    } else {
+      if (ack) {
+        if (message2) {
+          st' = false; 
+          message2' = false; 
+        } else {
+          st' = true; 
+          message2' = true; 
+        }
+      }
+    }
+
+  }
+  invariant message1_inv : (message1 ==> st);
+  invariant ack_inv : (ack ==> (message1 && !message2));
+  invariant st_inv : (st ==> !message2);
+  invariant message2_inv : (message2 ==> !message1);
+
+}

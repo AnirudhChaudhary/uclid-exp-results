@@ -1,0 +1,37 @@
+Model a program that has two variables: request of type boolean and status of enumeration type {ready, busy}: 0 denotes 'false' and 1 represents 'true.'
+
+The initial and subsequent values of variable request are not determined within this program; this conservatively models that these values are determined by an external environment. This under-specification of request implies that the value of variable status is partially determined: initially, it is ready; and it becomes busy whenever request is true. If request is false, the next value of status is not determined.
+
+Write a property that checks that, if request is true, eventually status becomes busy. You can introduce auxiliary variables to do this.
+
+Use the variable names request and status.
+
+
+module Module {
+  var next_status: real;
+  var nondet_1: real;
+  var prev_status: integer;
+  var status: integer;
+  var request: boolean;
+  var prev_request: boolean;
+  var pred: boolean;
+
+  init {
+    status = 0; 
+
+  }
+  next {
+    if (request) {
+      status' = 1; 
+    }
+    havoc nondet_1; 
+    prev_request' = request; 
+    prev_status' = status; 
+    next_status' = nondet_1; 
+    pred' = (prev_request && (prev_status == 0)); 
+
+  }
+  invariant request_inv : !request;
+  invariant status_inv : (request ==> ((status == 1) && pred));
+  invariant pred_inv : (request ==> pred);
+}

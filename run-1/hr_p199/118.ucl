@@ -1,0 +1,62 @@
+You may recall the puzzle of a ferryman, goat, cabbage, and wolf all on one side of a river. The ferryman can cross the river with at most one passenger in his boat. There is a behavioural conflict between:
+1. the goat and the cabbage; and
+2. the goat and the wolf;
+if they are on the same river bank but the ferryman crosses the river or stays on the other bank.
+
+We wish to know how the ferryman can transport all goods to the other side, without any conflicts occurring.
+
+Build a model in which the states represent which goods are at which side of the river. Your model will need to have variables representing the location of the ferryman, the goat, the cabbage and the wolf and a variable that indicates what is being carried in the ferry.
+
+Define a goal state in which all goods are on the other side of the river. Write a property which checks whether this goal state is reachable without any conflicts occurring.
+
+Use the variable names ferryman, goat, cabbage, wolf and carry.
+
+
+module FerryPuzzle {
+  type Range = integer;
+  type Location = Range;
+  type CarryItem = bv2;
+
+  var ferryman: Location;
+  var goat: Location;
+  var cabbage: Location;
+  var wolf: Location;
+  var carry: integer;
+
+  next {
+    ferryman' = (1 - ferryman); 
+    if (ferryman == 0) {
+      if (carry == 1) {
+        goat' = 0; 
+      } else {
+        if (carry == 2) {
+          wolf' = 0; 
+        } else {
+          if (carry == 3) {
+            cabbage' = 0; 
+          }
+        }
+      }
+    } else {
+      if (carry == 1) {
+        goat' = 1; 
+      } else {
+        if (carry == 2) {
+          wolf' = 1; 
+        } else {
+          if (carry == 3) {
+            cabbage' = 1; 
+          }
+        }
+      }
+    }
+
+  }
+  invariant ferryman_inv : ((ferryman >= 0) && (ferryman <= 1));
+  invariant goat_inv : ((goat >= 0) && (goat <= 1));
+  invariant cabbage_inv : ((cabbage >= 0) && (cabbage <= 1));
+  invariant wolf_inv : ((wolf >= 0) && (wolf <= 1));
+  invariant carry_inv : ((carry >= 0) && (carry <= 3));
+  invariant conflict_1 : ((ferryman == 1) && ((goat == 0) && ((cabbage == 0) || (wolf == 0))));
+  invariant conflict_2 : ((ferryman == 0) && ((goat == 1) && ((cabbage == 1) || (wolf == 1))));
+}

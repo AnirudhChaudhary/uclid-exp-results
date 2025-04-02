@@ -1,0 +1,28 @@
+Consider a stack of nonnegative integers with capacity n (for some fixed n).
+
+Model a transition system representation of this stack. You may abstract from the values on
+the stack and use the operations top, pop, and push with their usual meaning.
+
+Use the variable name s for the stack.
+
+
+module StackModule {
+  type n = integer;
+
+  var index: integer;
+  var s: [integer]n;
+  var top_val: integer;
+
+  input push_val: integer;
+
+  init {
+    s = s[index -> push_val]; 
+    top_val = s[index]; 
+
+  }
+  next {
+    index' = (index + 1); 
+    top_val' = s[index]; 
+
+  }
+}

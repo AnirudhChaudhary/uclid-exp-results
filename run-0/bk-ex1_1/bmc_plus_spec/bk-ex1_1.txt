@@ -1,0 +1,1055 @@
+[23:03:05] ╭──────────────────────────────────────────────────────── 🤖 Prompt: ────────────────────────────────────────────────────────╮ utils.py:29
+           │ Write Python code that extends the `Module` class below to complete the following task.                                    │            
+           │                                                                                                                            │            
+           │ > Build a model of a concurrent program, in which three processes, Inc, Dec, and Reset, cooperate. They operate on the     │            
+           │ shared integer variable x with arbitrary initial value that can be accessed (i.e., read), and modified (i.e., written) by  │            
+           │ each of the individual processes. The processes are: proc Inc = while true do if x<200 then x:=x+1 fi od proc Dec = while  │            
+           │ true do if x>0 then x:= x−1 fi od proc Reset = while true do if x=200 then x:=0 fi od Process Inc increments x if its      │            
+           │ value is smaller than 200, Dec decrements x if its value is at least 1, and Reset resets x once it has reached the value   │            
+           │ 200. They all do so repetitively. Write an invariant that checks if the value of x is always between (and including) 0 and │            
+           │ 200. Use the variable name x.                                                                                              │            
+           │                                                                                                                            │            
+           │ Reply with your Python code inside one unique code block.                                                                  │            
+           │                                                                                                                            │            
+           │ ```python                                                                                                                  │            
+           │ class Module:                                                                                                              │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                  │            
+           │                                                                                                                            │            
+           │     def types(self):                                                                                                       │            
+           │         """(Optional) Defines the type declarations.                                                                       │            
+           │         For example, the following implementation defines a 8-bit type called T:                                           │            
+           │         ```                                                                                                                │            
+           │         def types(self):                                                                                                   │            
+           │             self.T = BitVector(8)                                                                                          │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def locals(self):                                                                                                      │            
+           │         """(Optional) Defines the local variables and their types.                                                         │            
+           │         For example, the following implementation defines an 8-bit variable x                                              │            
+           │         and an integer variable y:                                                                                         │            
+           │         ```                                                                                                                │            
+           │         def locals(self):                                                                                                  │            
+           │             self.x = BitVector(8)                                                                                          │            
+           │             self.y = Integer()                                                                                             │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def inputs(self):                                                                                                      │            
+           │         """(Optional) Defines the input variables and their types.                                                         │            
+           │         For example, the following implementation defines an input variable x,                                             │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                 │            
+           │         ```                                                                                                                │            
+           │         def inputs(self):                                                                                                  │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                     │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def outputs(self):                                                                                                     │            
+           │         """(Optional) Defines the output variables and their types.                                                        │            
+           │         For example, the following implementation defines an output variable y,                                            │            
+           │         which is a real number:                                                                                            │            
+           │         ```                                                                                                                │            
+           │         def outputs(self):                                                                                                 │            
+           │             self.y = Real()                                                                                                │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def shared_vars(self):                                                                                                 │            
+           │         """(Optional) Defines the shared variables and their types.                                                        │            
+           │         For example, the following implementation defines a shared variable z,                                             │            
+           │         which is an array of booleans indexed by integers:                                                                 │            
+           │         ```                                                                                                                │            
+           │         def shared_vars(self):                                                                                             │            
+           │             self.z = Array(Integer(), Boolean())                                                                           │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def instances(self):                                                                                                   │            
+           │         """(Optional) Defines the instances of other modules and relates their                                             │            
+           │         input, output, and shared variables to local variables. Every instance                                             │            
+           │         variable must be related to a local variable. For example, let M be                                                │            
+           │         another module with inputs x and y, and output z. The following                                                    │            
+           │         implementation defines an instance of M called m, and connects M's                                                 │            
+           │         input variable x to the local variable self.a, M's input variable y to                                             │            
+           │         the local variable self.b, and M's output variable z to the local                                                  │            
+           │         variable self.c:                                                                                                   │            
+           │         ```                                                                                                                │            
+           │         def instances(self):                                                                                               │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                       │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def init(self):                                                                                                        │            
+           │         """(Optional) Defines how variables are initialized.                                                               │            
+           │         For example, the following implementation initializes x to 0 if y is                                               │            
+           │         greater than or equal to 20:                                                                                       │            
+           │         ```                                                                                                                │            
+           │         def init(self):                                                                                                    │            
+           │             if self.y >= 20:                                                                                               │            
+           │                 self.x = 0                                                                                                 │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def next(self):                                                                                                        │            
+           │         """(Optional) Defines the transition relation.                                                                     │            
+           │         For example, the following implementation increments x or decrements y                                             │            
+           │         depending on z:                                                                                                    │            
+           │         ```                                                                                                                │            
+           │         def next(self):                                                                                                    │            
+           │             if self.z:                                                                                                     │            
+           │                 self.x = self.x + 1                                                                                        │            
+           │             else:                                                                                                          │            
+           │                 self.y = self.y - 1                                                                                        │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │ ```                                                                                                                        │            
+           │                                                                                                                            │            
+           │ I can definitely do that! Here is the Python code:                                                                         │            
+           │ ```python                                                                                                                  │            
+           │                                                                                                                            │            
+           ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭──────────────────────────────────────────── 🧠 Response: ─────────────────────────────────────────────╮                      utils.py:47
+           │ class Module:                                                                                         │                                 
+           │     """An abstract class to represent a UCLID5 module."""                                             │                                 
+           │                                                                                                       │                                 
+           │     def types(self):                                                                                  │                                 
+           │         """Defines the type declarations."""                                                          │                                 
+           │         self.x = Integer()                                                                            │                                 
+           │                                                                                                       │                                 
+           │     def locals(self):                                                                                 │                                 
+           │         """Defines the local variables and their types."""                                            │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def inputs(self):                                                                                 │                                 
+           │         """Defines the input variables and their types."""                                            │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def outputs(self):                                                                                │                                 
+           │         """Defines the output variables and their types."""                                           │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def shared_vars(self):                                                                            │                                 
+           │         """Defines the shared variables and their types."""                                           │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def instances(self):                                                                              │                                 
+           │         """Defines the instances of other modules and relates their                                   │                                 
+           │         input, output, and shared variables to local variables."""                                    │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def init(self):                                                                                   │                                 
+           │         """Defines how variables are initialized."""                                                  │                                 
+           │         self.x = 0                                                                                    │                                 
+           │                                                                                                       │                                 
+           │     def next(self):                                                                                   │                                 
+           │         """Defines the transition relation."""                                                        │                                 
+           │         self.Inc()                                                                                    │                                 
+           │         self.Dec()                                                                                    │                                 
+           │         self.Reset()                                                                                  │                                 
+           │                                                                                                       │                                 
+           │     def Inc(self):                                                                                    │                                 
+           │         """Process Inc = while true do if x<200 then x:=x+1 fi od"""                                  │                                 
+           │         while True:                                                                                   │                                 
+           │             self.x = If(self.x < 200, self.x + 1, self.x)                                             │                                 
+           │                                                                                                       │                                 
+           │     def Dec(self):                                                                                    │                                 
+           │         """Process Dec = while true do if x>0 then x:= x-1 fi od"""                                   │                                 
+           │         while True:                                                                                   │                                 
+           │             self.x = If(self.x > 0, self.x - 1, self.x)                                               │                                 
+           │                                                                                                       │                                 
+           │     def Reset(self):                                                                                  │                                 
+           │         """Process Reset = while true do if x=200 then x:=0 fi od"""                                  │                                 
+           │         while True:                                                                                   │                                 
+           │             self.x = If(self.x == 200, 0, self.x)                                                     │                                 
+           │                                                                                                       │                                 
+           │     def invariant(self):                                                                              │                                 
+           │         """                                                                                           │                                 
+           │         Write an invariant that checks if the value of x is always between (and including) 0 and 200. │                                 
+           │         """                                                                                           │                                 
+           │         return And(self.x >= 0, self.x <= 200)                                                        │                                 
+           │ ```                                                                                                   │                                 
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────╯                                 
+           ╭──────────────────────────────────────────── 🤖 Extracted: ────────────────────────────────────────────╮                      utils.py:29
+           │                                                                                                       │                                 
+           │ class Module:                                                                                         │                                 
+           │     """An abstract class to represent a UCLID5 module."""                                             │                                 
+           │                                                                                                       │                                 
+           │     def types(self):                                                                                  │                                 
+           │         """Defines the type declarations."""                                                          │                                 
+           │         self.x = Integer()                                                                            │                                 
+           │                                                                                                       │                                 
+           │     def locals(self):                                                                                 │                                 
+           │         """Defines the local variables and their types."""                                            │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def inputs(self):                                                                                 │                                 
+           │         """Defines the input variables and their types."""                                            │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def outputs(self):                                                                                │                                 
+           │         """Defines the output variables and their types."""                                           │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def shared_vars(self):                                                                            │                                 
+           │         """Defines the shared variables and their types."""                                           │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def instances(self):                                                                              │                                 
+           │         """Defines the instances of other modules and relates their                                   │                                 
+           │         input, output, and shared variables to local variables."""                                    │                                 
+           │         pass                                                                                          │                                 
+           │                                                                                                       │                                 
+           │     def init(self):                                                                                   │                                 
+           │         """Defines how variables are initialized."""                                                  │                                 
+           │         self.x = 0                                                                                    │                                 
+           │                                                                                                       │                                 
+           │     def next(self):                                                                                   │                                 
+           │         """Defines the transition relation."""                                                        │                                 
+           │         self.Inc()                                                                                    │                                 
+           │         self.Dec()                                                                                    │                                 
+           │         self.Reset()                                                                                  │                                 
+           │                                                                                                       │                                 
+           │     def Inc(self):                                                                                    │                                 
+           │         """Process Inc = while true do if x<200 then x:=x+1 fi od"""                                  │                                 
+           │         while True:                                                                                   │                                 
+           │             self.x = If(self.x < 200, self.x + 1, self.x)                                             │                                 
+           │                                                                                                       │                                 
+           │     def Dec(self):                                                                                    │                                 
+           │         """Process Dec = while true do if x>0 then x:= x-1 fi od"""                                   │                                 
+           │         while True:                                                                                   │                                 
+           │             self.x = If(self.x > 0, self.x - 1, self.x)                                               │                                 
+           │                                                                                                       │                                 
+           │     def Reset(self):                                                                                  │                                 
+           │         """Process Reset = while true do if x=200 then x:=0 fi od"""                                  │                                 
+           │         while True:                                                                                   │                                 
+           │             self.x = If(self.x == 200, 0, self.x)                                                     │                                 
+           │                                                                                                       │                                 
+           │     def invariant(self):                                                                              │                                 
+           │         """                                                                                           │                                 
+           │         Write an invariant that checks if the value of x is always between (and including) 0 and 200. │                                 
+           │         """                                                                                           │                                 
+           │         return And(self.x >= 0, self.x <= 200)                                                        │                                 
+           ╰───────────────────────────────────────────────────────────────────────────────────────────────────────╯                                 
+           ╭──── 🤖 Repaired: ─────╮                                                                                                      utils.py:29
+           │ class Module(Module): │                                                                                                                 
+           │   def locals(self):   │                                                                                                                 
+           │     self.x = int      │                                                                                                                 
+           │                       │                                                                                                                 
+           │   def init(self):     │                                                                                                                 
+           │     self.x = 0 #22    │                                                                                                                 
+           │                       │                                                                                                                 
+           │   def next(self):     │                                                                                                                 
+           │     ??                │                                                                                                                 
+           │     ??                │                                                                                                                 
+           │     ??                │                                                                                                                 
+           │                       │                                                                                                                 
+           │                       │                                                                                                                 
+           ╰───────────────────────╯                                                                                                                 
+[23:03:07] ╭──────────────────────────────────────────────────────── 🤖 Prompt: ────────────────────────────────────────────────────────╮ utils.py:29
+           │                                                                                                                            │            
+           │ Fix the following Python code by replacing every occurrence of `??` with the correct code.                                 │            
+           │ ```python                                                                                                                  │            
+           │ class Module(Module):                                                                                                      │            
+           │   def locals(self):                                                                                                        │            
+           │     self.x = int                                                                                                           │            
+           │                                                                                                                            │            
+           │   def init(self):                                                                                                          │            
+           │     self.x = 0 #22                                                                                                         │            
+           │                                                                                                                            │            
+           │   def next(self):                                                                                                          │            
+           │     ??                                                                                                                     │            
+           │     ??                                                                                                                     │            
+           │     ??                                                                                                                     │            
+           │                                                                                                                            │            
+           │   def specification(self):                                                                                                 │            
+           │     #0 <= x <= 200 in prop logic looks like:                                                                               │            
+           │     self.x_inv = ??                                                                                                        │            
+           │     # return expression should combine all previous invariants together                                                    │            
+           │     return ??                                                                                                              │            
+           │                                                                                                                            │            
+           │ ```                                                                                                                        │            
+           │ Make sure that your code extends the `Module` class below and that it completes the following task.                        │            
+           │                                                                                                                            │            
+           │ > Build a model of a concurrent program, in which three processes, Inc, Dec, and Reset, cooperate. They operate on the     │            
+           │ shared integer variable x with arbitrary initial value that can be accessed (i.e., read), and modified (i.e., written) by  │            
+           │ each of the individual processes. The processes are: proc Inc = while true do if x<200 then x:=x+1 fi od proc Dec = while  │            
+           │ true do if x>0 then x:= x−1 fi od proc Reset = while true do if x=200 then x:=0 fi od Process Inc increments x if its      │            
+           │ value is smaller than 200, Dec decrements x if its value is at least 1, and Reset resets x once it has reached the value   │            
+           │ 200. They all do so repetitively. Write an invariant that checks if the value of x is always between (and including) 0 and │            
+           │ 200. Use the variable name x.                                                                                              │            
+           │                                                                                                                            │            
+           │ Reply with your Python code inside one unique code block.                                                                  │            
+           │                                                                                                                            │            
+           │ ```python                                                                                                                  │            
+           │ class Module:                                                                                                              │            
+           │     """An abstract class to represent a UCLID5 module."""                                                                  │            
+           │                                                                                                                            │            
+           │     def types(self):                                                                                                       │            
+           │         """(Optional) Defines the type declarations.                                                                       │            
+           │         For example, the following implementation defines a 8-bit type called T:                                           │            
+           │         ```                                                                                                                │            
+           │         def types(self):                                                                                                   │            
+           │             self.T = BitVector(8)                                                                                          │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def locals(self):                                                                                                      │            
+           │         """(Optional) Defines the local variables and their types.                                                         │            
+           │         For example, the following implementation defines an 8-bit variable x                                              │            
+           │         and an integer variable y:                                                                                         │            
+           │         ```                                                                                                                │            
+           │         def locals(self):                                                                                                  │            
+           │             self.x = BitVector(8)                                                                                          │            
+           │             self.y = Integer()                                                                                             │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def inputs(self):                                                                                                      │            
+           │         """(Optional) Defines the input variables and their types.                                                         │            
+           │         For example, the following implementation defines an input variable x,                                             │            
+           │         which is an array of 8-bit bitvectors indexed by 2-bit bitvectors:                                                 │            
+           │         ```                                                                                                                │            
+           │         def inputs(self):                                                                                                  │            
+           │             self.x = Array(BitVector(2), BitVector(8))                                                                     │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def outputs(self):                                                                                                     │            
+           │         """(Optional) Defines the output variables and their types.                                                        │            
+           │         For example, the following implementation defines an output variable y,                                            │            
+           │         which is a real number:                                                                                            │            
+           │         ```                                                                                                                │            
+           │         def outputs(self):                                                                                                 │            
+           │             self.y = Real()                                                                                                │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def shared_vars(self):                                                                                                 │            
+           │         """(Optional) Defines the shared variables and their types.                                                        │            
+           │         For example, the following implementation defines a shared variable z,                                             │            
+           │         which is an array of booleans indexed by integers:                                                                 │            
+           │         ```                                                                                                                │            
+           │         def shared_vars(self):                                                                                             │            
+           │             self.z = Array(Integer(), Boolean())                                                                           │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def instances(self):                                                                                                   │            
+           │         """(Optional) Defines the instances of other modules and relates their                                             │            
+           │         input, output, and shared variables to local variables. Every instance                                             │            
+           │         variable must be related to a local variable. For example, let M be                                                │            
+           │         another module with inputs x and y, and output z. The following                                                    │            
+           │         implementation defines an instance of M called m, and connects M's                                                 │            
+           │         input variable x to the local variable self.a, M's input variable y to                                             │            
+           │         the local variable self.b, and M's output variable z to the local                                                  │            
+           │         variable self.c:                                                                                                   │            
+           │         ```                                                                                                                │            
+           │         def instances(self):                                                                                               │            
+           │             self.m = M(x=self.a, y=self.b, z=self.c)                                                                       │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def init(self):                                                                                                        │            
+           │         """(Optional) Defines how variables are initialized.                                                               │            
+           │         For example, the following implementation initializes x to 0 if y is                                               │            
+           │         greater than or equal to 20:                                                                                       │            
+           │         ```                                                                                                                │            
+           │         def init(self):                                                                                                    │            
+           │             if self.y >= 20:                                                                                               │            
+           │                 self.x = 0                                                                                                 │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def next(self):                                                                                                        │            
+           │         """(Optional) Defines the transition relation.                                                                     │            
+           │         For example, the following implementation increments x or decrements y                                             │            
+           │         depending on z:                                                                                                    │            
+           │         ```                                                                                                                │            
+           │         def next(self):                                                                                                    │            
+           │             if self.z:                                                                                                     │            
+           │                 self.x = self.x + 1                                                                                        │            
+           │             else:                                                                                                          │            
+           │                 self.y = self.y - 1                                                                                        │            
+           │         ```                                                                                                                │            
+           │         """                                                                                                                │            
+           │         pass                                                                                                               │            
+           │                                                                                                                            │            
+           │     def specification(self):                                                                                               │            
+           │         """(Required) Defines the specification in terms of invariant properties.                                          │            
+           │                                                                                                                            │            
+           │         Returns:                                                                                                           │            
+           │             bool: True if the specification is satisfied, False otherwise.                                                 │            
+           │                                                                                                                            │            
+           │         For example, the following implementation defines two invariants:                                                  │            
+           │         ```                                                                                                                │            
+           │         def specification(self):                                                                                           │            
+           │             return self.x < 10 and self.y > 0                                                                              │            
+           │                                                                                                                            │            
+           │         DO NOT JUST RETURN THE VARIABLE TYPES!                                                                             │            
+           │         """                                                                                                                │            
+           │         raise NotImplementedError                                                                                          │            
+           │ ```                                                                                                                        │            
+           │                                                                                                                            │            
+           │ I can definitely do that! Here is the fixed Python code:                                                                   │            
+           │ ```python                                                                                                                  │            
+           │                                                                                                                            │            
+           ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+[23:03:09] ╭────────────────────────────────────────────────── 🧠 Original Response: ───────────────────────────────────────────────────╮ utils.py:47
+           │ class Module(Module):                                                                                                      │            
+           │     def locals(self):                                                                                                      │            
+           │         self.x = Integer()                                                                                                 │            
+           │                                                                                                                            │            
+           │     def init(self):                                                                                                        │            
+           │         self.x = 0  # 22                                                                                                   │            
+           │                                                                                                                            │            
+           │     def next(self):                                                                                                        │            
+           │         if self.x < 200:                                                                                                   │            
+           │             self.x = self.x + 1                                                                                            │            
+           │         if self.x > 0:                                                                                                     │            
+           │             self.x = self.x - 1                                                                                            │            
+           │         if self.x == 200:                                                                                                  │            
+           │             self.x = 0                                                                                                     │            
+           │                                                                                                                            │            
+           │     def specification(self):                                                                                               │            
+           │         # 0 <= x <= 200 in prop logic looks like:                                                                          │            
+           │         self.x_inv = And(self.x >= 0, self.x <= 200)                                                                       │            
+           │         # return expression should combine all previous invariants together                                                │            
+           │         return self.x_inv                                                                                                  │            
+           │ ```                                                                                                                        │            
+           │                                                                                                                            │            
+           │ This code correctly extends the `Module` class and completes the task by implementing the specified processes and ensuring │            
+           │ the invariant for the shared variable `x`.                                                                                 │            
+           ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯            
+           ╭─────────────────────────────── 🤖 Extracted: ───────────────────────────────╮                                                utils.py:29
+           │                                                                             │                                                           
+           │ class Module(Module):                                                       │                                                           
+           │     def locals(self):                                                       │                                                           
+           │         self.x = Integer()                                                  │                                                           
+           │                                                                             │                                                           
+           │     def init(self):                                                         │                                                           
+           │         self.x = 0  # 22                                                    │                                                           
+           │                                                                             │                                                           
+           │     def next(self):                                                         │                                                           
+           │         if self.x < 200:                                                    │                                                           
+           │             self.x = self.x + 1                                             │                                                           
+           │         if self.x > 0:                                                      │                                                           
+           │             self.x = self.x - 1                                             │                                                           
+           │         if self.x == 200:                                                   │                                                           
+           │             self.x = 0                                                      │                                                           
+           │                                                                             │                                                           
+           │     def specification(self):                                                │                                                           
+           │         # 0 <= x <= 200 in prop logic looks like:                           │                                                           
+           │         self.x_inv = And(self.x >= 0, self.x <= 200)                        │                                                           
+           │         # return expression should combine all previous invariants together │                                                           
+           │         return self.x_inv                                                   │                                                           
+           ╰─────────────────────────────────────────────────────────────────────────────╯                                                           
+           ╭──────────────────── 🤖 Repaired: ────────────────────╮                                                                       utils.py:29
+           │ class Module(Module):                                │                                                                                  
+           │   def locals(self):                                  │                                                                                  
+           │     self.x = int                                     │                                                                                  
+           │                                                      │                                                                                  
+           │   def init(self):                                    │                                                                                  
+           │     self.x = 0 #18                                   │                                                                                  
+           │                                                      │                                                                                  
+           │   def next(self):                                    │                                                                                  
+           │     if (self.x < 200):                               │                                                                                  
+           │       self.x = (self.x + 1) #33                      │                                                                                  
+           │     if (self.x > 0):                                 │                                                                                  
+           │       self.x = (self.x - 1) #48                      │                                                                                  
+           │     if (self.x == 200):                              │                                                                                  
+           │       self.x = 0 #60                                 │                                                                                  
+           │                                                      │                                                                                  
+           │   def specification(self):                           │                                                                                  
+           │     self.x_inv = ((self.x >= 0) and (self.x <= 200)) │                                                                                  
+           │     return self.x_inv                                │                                                                                  
+           │                                                      │                                                                                  
+           │                                                      │                                                                                  
+           ╰──────────────────────────────────────────────────────╯                                                                                  
+           ╭────── 🤖 Stats: ──────╮                                                                                                      utils.py:29
+           │ Original Lines: 59    │                                                                                                                 
+           │ Final Lines:    19    │                                                                                                                 
+           │ LLM Calls:      2     │                                                                                                                 
+           │ LLM Time:       5.59s │                                                                                                                 
+           │ Repair Time:    0.94s │                                                                                                                 
+           │                       │                                                                                                                 
+           ╰───────────────────────╯                                                                                                                 
+[23:03:10] ╭──────────── ✅ UCL MOD BEFORE BMC ────────────╮                                                                              utils.py:69
+           │ module Module {                               │                                                                                         
+           │   var x: integer;                             │                                                                                         
+           │                                               │                                                                                         
+           │   init {                                      │                                                                                         
+           │     x = 0; //18                               │                                                                                         
+           │                                               │                                                                                         
+           │   }                                           │                                                                                         
+           │   procedure step()                            │                                                                                         
+           │     modifies x;                               │                                                                                         
+           │   {                                           │                                                                                         
+           │     if (x < 200) {                            │                                                                                         
+           │       x = (x + 1); //33                       │                                                                                         
+           │     }                                         │                                                                                         
+           │     if (x > 0) {                              │                                                                                         
+           │       x = (x - 1); //48                       │                                                                                         
+           │     }                                         │                                                                                         
+           │     if (x == 200) {                           │                                                                                         
+           │       x = 0; //60                             │                                                                                         
+           │     }                                         │                                                                                         
+           │   }                                           │                                                                                         
+           │                                               │                                                                                         
+           │   next {                                      │                                                                                         
+           │     call step();                              │                                                                                         
+           │   }                                           │                                                                                         
+           │   invariant x_inv : ((x >= 0) && (x <= 200)); │                                                                                         
+           │                                               │                                                                                         
+           │   control  {                                  │                                                                                         
+           │     v = bmc(3);                               │                                                                                         
+           │     check;                                    │                                                                                         
+           │     print_results;                            │                                                                                         
+           │     v.print_cex();                            │                                                                                         
+           │   }                                           │                                                                                         
+           │ }                                             │                                                                                         
+           │                                               │                                                                                         
+           ╰───────────────────────────────────────────────╯                                                                                         
+ran uclid with 0 iterations | passed: 1 | failed: 0
+ran uclid with 3 iterations | passed: 4 | failed: 0
+ran uclid with llm iterations | passed: 501 | failed: 0
+[23:03:19] ╭────────────── ✅ Original UCLID Terminal Output:  ──────────────╮                                                            utils.py:69
+           │ Successfully instantiated 1 module(s).                          │                                                                       
+           │ 501 assertions passed.                                          │                                                                       
+           │ 0 assertions failed.                                            │                                                                       
+           │ 0 assertions indeterminate.                                     │                                                                       
+           │   PASSED -> v [Step #0] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #1] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #2] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #3] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #4] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #5] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #6] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #7] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #8] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #9] property x_inv @ testing.ucl, line 25   │                                                                       
+           │   PASSED -> v [Step #10] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #11] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #12] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #13] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #14] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #15] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #16] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #17] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #18] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #19] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #20] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #21] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #22] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #23] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #24] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #25] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #26] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #27] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #28] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #29] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #30] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #31] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #32] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #33] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #34] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #35] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #36] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #37] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #38] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #39] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #40] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #41] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #42] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #43] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #44] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #45] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #46] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #47] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #48] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #49] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #50] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #51] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #52] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #53] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #54] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #55] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #56] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #57] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #58] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #59] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #60] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #61] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #62] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #63] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #64] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #65] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #66] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #67] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #68] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #69] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #70] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #71] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #72] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #73] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #74] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #75] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #76] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #77] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #78] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #79] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #80] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #81] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #82] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #83] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #84] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #85] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #86] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #87] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #88] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #89] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #90] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #91] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #92] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #93] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #94] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #95] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #96] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #97] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #98] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #99] property x_inv @ testing.ucl, line 25  │                                                                       
+           │   PASSED -> v [Step #100] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #101] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #102] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #103] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #104] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #105] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #106] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #107] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #108] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #109] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #110] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #111] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #112] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #113] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #114] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #115] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #116] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #117] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #118] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #119] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #120] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #121] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #122] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #123] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #124] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #125] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #126] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #127] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #128] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #129] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #130] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #131] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #132] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #133] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #134] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #135] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #136] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #137] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #138] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #139] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #140] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #141] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #142] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #143] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #144] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #145] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #146] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #147] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #148] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #149] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #150] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #151] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #152] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #153] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #154] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #155] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #156] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #157] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #158] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #159] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #160] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #161] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #162] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #163] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #164] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #165] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #166] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #167] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #168] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #169] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #170] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #171] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #172] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #173] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #174] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #175] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #176] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #177] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #178] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #179] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #180] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #181] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #182] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #183] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #184] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #185] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #186] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #187] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #188] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #189] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #190] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #191] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #192] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #193] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #194] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #195] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #196] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #197] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #198] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #199] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #200] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #201] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #202] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #203] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #204] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #205] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #206] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #207] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #208] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #209] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #210] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #211] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #212] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #213] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #214] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #215] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #216] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #217] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #218] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #219] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #220] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #221] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #222] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #223] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #224] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #225] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #226] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #227] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #228] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #229] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #230] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #231] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #232] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #233] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #234] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #235] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #236] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #237] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #238] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #239] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #240] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #241] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #242] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #243] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #244] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #245] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #246] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #247] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #248] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #249] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #250] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #251] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #252] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #253] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #254] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #255] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #256] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #257] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #258] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #259] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #260] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #261] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #262] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #263] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #264] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #265] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #266] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #267] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #268] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #269] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #270] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #271] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #272] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #273] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #274] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #275] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #276] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #277] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #278] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #279] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #280] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #281] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #282] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #283] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #284] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #285] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #286] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #287] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #288] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #289] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #290] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #291] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #292] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #293] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #294] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #295] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #296] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #297] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #298] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #299] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #300] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #301] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #302] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #303] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #304] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #305] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #306] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #307] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #308] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #309] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #310] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #311] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #312] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #313] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #314] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #315] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #316] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #317] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #318] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #319] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #320] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #321] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #322] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #323] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #324] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #325] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #326] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #327] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #328] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #329] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #330] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #331] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #332] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #333] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #334] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #335] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #336] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #337] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #338] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #339] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #340] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #341] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #342] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #343] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #344] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #345] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #346] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #347] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #348] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #349] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #350] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #351] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #352] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #353] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #354] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #355] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #356] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #357] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #358] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #359] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #360] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #361] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #362] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #363] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #364] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #365] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #366] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #367] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #368] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #369] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #370] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #371] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #372] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #373] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #374] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #375] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #376] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #377] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #378] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #379] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #380] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #381] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #382] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #383] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #384] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #385] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #386] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #387] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #388] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #389] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #390] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #391] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #392] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #393] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #394] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #395] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #396] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #397] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #398] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #399] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #400] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #401] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #402] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #403] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #404] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #405] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #406] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #407] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #408] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #409] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #410] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #411] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #412] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #413] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #414] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #415] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #416] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #417] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #418] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #419] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #420] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #421] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #422] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #423] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #424] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #425] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #426] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #427] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #428] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #429] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #430] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #431] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #432] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #433] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #434] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #435] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #436] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #437] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #438] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #439] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #440] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #441] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #442] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #443] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #444] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #445] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #446] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #447] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #448] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #449] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #450] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #451] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #452] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #453] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #454] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #455] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #456] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #457] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #458] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #459] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #460] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #461] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #462] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #463] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #464] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #465] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #466] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #467] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #468] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #469] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #470] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #471] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #472] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #473] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #474] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #475] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #476] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #477] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #478] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #479] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #480] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #481] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #482] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #483] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #484] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #485] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #486] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #487] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #488] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #489] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #490] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #491] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #492] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #493] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #494] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #495] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #496] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #497] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #498] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #499] property x_inv @ testing.ucl, line 25 │                                                                       
+           │   PASSED -> v [Step #500] property x_inv @ testing.ucl, line 25 │                                                                       
+           │ Finished execution for module: Module.                          │                                                                       
+           │                                                                 │                                                                       
+           ╰─────────────────────────────────────────────────────────────────╯                                                                       
+           ╭─ ✅ Filtered UCLID Terminal Output:  ─╮                                                                                      utils.py:69
+           │ All BMC cases passed                  │                                                                                                 
+           ╰───────────────────────────────────────╯                                                                                                 
+stopping condition for just using bmc (found no failed assertions and uclid passes)
+           ╭─────── 🤖 Stats: ───────╮                                                                                                    utils.py:29
+           │   SEMANTIC ITERATION 1  │                                                                                                               
+           │ Original Lines: 59      │                                                                                                               
+           │ Final Lines:    19      │                                                                                                               
+           │ LLM Calls:      2       │                                                                                                               
+           │ LLM Time:       5.59s   │                                                                                                               
+           │ Repair Time:    0.94s   │                                                                                                               
+           │ Failed Assertions:  0   │                                                                                                               
+           │ Passed Assertions:  501 │                                                                                                               
+           │ -------------------     │                                                                                                               
+           │                         │                                                                                                               
+           ╰─────────────────────────╯                                                                                                               
