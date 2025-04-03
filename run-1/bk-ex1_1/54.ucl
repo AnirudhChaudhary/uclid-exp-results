@@ -1,3 +1,4 @@
+/*
 Build a model of a concurrent program, in which three processes, Inc, Dec, and Reset, cooperate. They operate on the shared integer variable x with arbitrary initial value that can be accessed (i.e., read), and modified (i.e., written) by each of the individual processes.
 
 The processes are:
@@ -10,7 +11,7 @@ Process Inc increments x if its value is smaller than 200, Dec decrements x if i
 Write an invariant that checks if the value of x is always between (and including) 0 and 200.
 
 Use the variable name x.
-
+*/
 
 module Module {
   var Dec: boolean;

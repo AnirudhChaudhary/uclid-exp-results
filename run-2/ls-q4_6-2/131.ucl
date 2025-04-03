@@ -1,0 +1,58 @@
+/*
+Model the following feature for an automobile:
+
+Once the engine is started, a beeper is sounded and a red light warning is indicated if there are passengers that have not buckled their seat belt. The beeper stops sounding after 30 seconds, or as soon the seat belts are buckled, whichever is sooner. The warning light is on all the time the seat belt is un-buckled. Hint: Assume the sensors provide a warn event when the ignition is turned on and there is a seat with passenger not buckled in, or if the ignition is already on and a passenger sits in a seat without buckling the seatbelt. Assume further that the sensors provide a noWarn event when a passenger departs from a seat, or when the buckle is buckled, or when the ignition is turned off.
+
+Use the variable names warn, nowarn, time, ignitian and bucked.
+*/
+
+module Automobile {
+  var warn: boolean;
+  var nowarn: boolean;
+  var time: integer;
+  var ignition: boolean;
+  var buckled: [integer]boolean;
+
+  init {
+    warn = false; //38
+    nowarn = true; //42
+    time = 0; //46
+    ignition = false; //50
+
+  }
+  procedure step()
+    modifies time;
+    modifies warn;
+  {
+    if (ignition) {
+      if (exists (p0:integer) :: (buckled[p0] && !buckled[p0])) {
+        warn = true; //77
+      } else {
+        warn = false; //82
+      }
+      if ((time < 30) && (exists (p1:integer) :: !buckled[p1])) {
+        time = (time + 1); //108
+      } else {
+        if (exists (p2:integer) :: !buckled[p2]) {
+          warn = false; //125
+        }
+      }
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant warn_inv : (((time < 30) || (exists (p3:integer) :: !buckled[p3])) && (ignition && (exists (p4:integer) :: !buckled[p4])));
+  invariant nowarn_inv : !warn_inv;
+  invariant time_inv : ((time >= 0) && (forall (p5:integer) :: (!buckled[p5] ==> (time <= 30))));
+  invariant ignition_inv : ignition;
+  invariant buckled_inv : (forall (p6:integer) :: (buckled[p6] ==> (buckled[p6] || !buckled[p6])));
+
+  control  {
+    v = bmc(3);
+    check;
+    print_results;
+    v.print_cex();
+  }
+}

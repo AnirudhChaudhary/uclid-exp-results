@@ -1,3 +1,4 @@
+/*
 You may recall the puzzle of a ferryman, goat, cabbage, and wolf all on one side of a river. The ferryman can cross the river with at most one passenger in his boat. There is a behavioural conflict between:
 1. the goat and the cabbage; and
 2. the goat and the wolf;
@@ -10,7 +11,7 @@ Build a model in which the states represent which goods are at which side of the
 Define a goal state in which all goods are on the other side of the river. Write a property which checks whether this goal state is reachable without any conflicts occurring.
 
 Use the variable names ferryman, goat, cabbage, wolf and carry.
-
+*/
 
 module Ferryman {
   var cabbage: enum { A, B };

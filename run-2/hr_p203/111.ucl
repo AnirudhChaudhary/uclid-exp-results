@@ -1,0 +1,57 @@
+/*
+The alternating bit protocol (ABP) is a protocol for transmitting messages along a 'lossy line,' i.e., a line which may lose or duplicate messages. The protocol guarantees that, providing the line doesn't lose infinitely many messages, communication between the sender and the receiver will be successful. (We allow the line to lose or duplicate messages, but it may not corrupt messages; however, there is no way of guaranteeing successful transmission along a line which can corrupt.)
+
+The ABP works as follows. There are four entities, or agents: the sender, the receiver, the message channel and the acknowledgement channel. The sender transmits the first part of the message together with the 'control' bit 0. If, and when, the receiver receives a message with the control bit 0, it sends 0 along the acknowledgement channel. When the sender receives this acknowledgement, it sends the next packet with the control bit 1. If and when the receiver receives this, it acknowledges by sending a 1 on the acknowledgement channel. By alternating the control bit, both receiver and sender can guard against duplicating messages and losing messages (i.e., they ignore messages that have the unexpected control bit).
+If the sender doesn't get the expected acknowledgement, it continually re-sends the message, until the acknowledgement arrives. If the receiver doesn't get a message with the expected control bit, it continually resends the previous acknowledgement.
+
+Write a model for the alternating bit protocol. Write a set of properties that check that your model behaves as described above.
+
+Use the variable names st, message1, message2 and ack.
+*/
+
+module AlternatingBitProtocol {
+  var ack: integer;
+  var sender_st: integer;
+  var receiver_st: integer;
+
+  input sender_message1: bv8;
+  input sender_message2: bv8;
+  input receiver_message1: bv8;
+  input receiver_message2: bv8;
+
+  init {
+    sender_st = 0; //47
+    receiver_st = 0; //51
+
+  }
+  next {
+    if (sender_st == 0) {
+      sender_st' = 1; //63
+    } else {
+      if ((sender_st == 1) && (ack == 0)) {
+        ack' = 0; //80
+      } else {
+        if ((sender_st == 1) && (ack == 1)) {
+          sender_st' = 0; //97
+        }
+      }
+    }
+    if ((receiver_st == 0) && (ack == 0)) {
+      ack' = 0; //117
+      receiver_st' = 1; //121
+    } else {
+      if ((receiver_st == 1) && (ack == 1)) {
+        ack' = 1; //138
+        receiver_st' = 0; //142
+      }
+    }
+
+  }
+  invariant spec: (((sender_st == 0) && (receiver_st == 0)) && (ack == 0));
+  control  {
+    v = bmc(3);
+    check;
+    print_results;
+    v.print_cex();
+  }
+}

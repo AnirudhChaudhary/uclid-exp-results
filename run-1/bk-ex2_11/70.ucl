@@ -1,3 +1,4 @@
+/*
 Consider the circuit diagram of the sequential circuit with input variable x, output variable y, and register r.
 
 The output variable y is given by the negation of x xor r.
@@ -16,6 +17,7 @@ S2: x=1, r=0
 Write an LTL property that checks that the output bit y is set infinitely often. You may use auxiliary variables.
 
 Use the variable names x, y and r.
+*/
 
 
 module Module {

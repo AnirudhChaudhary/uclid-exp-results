@@ -1,0 +1,69 @@
+/*
+Consider a (strongly simplified) booking system at a cashier of a supermarket. The system consists of three processes: the bar code reader BCR, the actual booking program BP, and the printer Printer. The bar code reader reads a bar code and communicates the data of the just scanned product to the booking program. On receiving such data, the booking program transmits the price of the article to the printer that prints the article Id together with the price on the receipt. The interactions between the bar code reader and the booking program, and between the booking program and the printer is performed by handshaking. Each process consist of just two states, named 0 and 1.
+
+BCR transitions from state 0 to state 1 when a bar code is scanned, and from state 1 to state 0 when the data is sent to BP.
+
+BP transitions from state 0 to state 1 when it receives data from BCR, and from state 1 to state 0 when it sends the print command to the printer
+
+Printer transitions from state 0 to state 1 when the print code is sent by BP, and from state 1 to state 0 when the article is printed.
+
+
+The complete system is given by:
+BCR || BP || Printer.
+
+Model this system.
+
+Use the variable names BCR_state, BP_state and Printer_state.
+*/
+
+module BookingSystem {
+  var print: bv32;
+  var BCR_state: bv1;
+  var BP_state: bv1;
+  var Printer_state: bv1;
+
+  init {
+    BCR_state = 0bv1; //37
+    BP_state = 0bv1; //44
+    Printer_state = 0bv1; //51
+
+  }
+  procedure step()
+    modifies print;
+    modifies BCR_state;
+    modifies Printer_state;
+    modifies BP_state;
+  {
+    if (BCR_state == 0bv1) {
+      BCR_state = 1bv1; //69
+    }
+    if (Printer_state == 1bv1) {
+      BCR_state = 0bv1; //87
+      BP_state = 1bv1; //94
+    }
+    if (BP_state == 1bv1) {
+      print = 0bv32; //112
+      Printer_state = 1bv1; //119
+    }
+  }
+
+  next {
+    call step();
+  }
+  invariant bcr_state_inv : ((BCR_state == 1bv1) == (BP_state == 0bv1));
+  invariant bp_state_inv : ((BP_state == 1bv1) == (Printer_state == 0bv1));
+  invariant printer_state_inv : ((Printer_state == 1bv1) == (print == 0bv32));
+  invariant BCR_state_inv : (BCR_state == 1bv1);
+  invariant BP_state_inv : (BP_state == 1bv1);
+  invariant Printer_state_inv : (Printer_state == 1bv1);
+  invariant BP_state_inv : ((BCR_state == 1bv1) == (BP_state == 0bv1));
+  invariant BP_state_inv : ((BP_state == 1bv1) == (Printer_state == 0bv1));
+  invariant Printer_state_inv : ((Printer_state == 1bv1) == (print == 0bv32));
+
+  control  {
+    v = bmc(3);
+    check;
+    print_results;
+    v.print_cex();
+  }
+}

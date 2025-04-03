@@ -1,3 +1,4 @@
+/*
 Consider a system essentially consisting of a sender S and a receiver R that communicate with each other over channels c and d. The receiver sends messages to the sender via channel d, and the sender sends messages to the receiver via channel c.
 
 It is assumed that both channels have an unlimited buffer.
@@ -12,7 +13,7 @@ Each message m from S is sent with a control bit b, and when R receives this, it
 Build a model of this system, using submodules for S and R.
 
 Use the variable names c, d, S, R, m and b
-
+*/
 
 module Module {
   var c: boolean;

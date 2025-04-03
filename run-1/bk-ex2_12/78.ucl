@@ -1,3 +1,4 @@
+/*
 Model a design of a beverage vending machine. The machine can either deliver beer or soda. It counts the number of soda and beer bottles and returns inserted coins if the vending machine is empty.
 
 The vending machine is represented by the two locations start and select, and has variables that store the number of soda bottles (nsoda), and the number of beer bottles (nbeer).
@@ -27,6 +28,7 @@ bget: nbeer:=nbeer-1
 You may use boolean variables to indicate when an action is enabled.
 
 Use the variable names nsoda, nbeer, sget, bget, refill, coin.
+*/
 
 
 module VendingMachine {

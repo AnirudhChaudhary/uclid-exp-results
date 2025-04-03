@@ -1,0 +1,46 @@
+/*
+Model a thermostat that controls a heater. The heater has two states: on and off.
+
+In the initial state, if the temperature is less than or equal to 20 degrees Celsius, it turns the heater on, and leaves it on for at least 30 seconds. After that, if the temperature is greater than 20 degrees, it turns the heater off and leaves it off for at least 2 minutes. It turns it on again only if the temperature is less than or equal to 20 degrees.
+
+Model a system that behaves as described above, assuming it reacts exactly only once every 30 seconds.
+
+Use the variable names temp, heatOn, heatOff and time.
+*/
+
+
+module Thermostat {
+  var temp: integer;
+  var heatOn: boolean;
+  var heatOff: boolean;
+  var time: integer;
+
+  init {
+    temp = 20; //30
+    heatOn = (if (temp <= 20) then true else false); //41
+    heatOff = (if (temp > 20) then true else false); //52
+    time = 0; //56
+
+  }
+  next {
+    time' = (if (time < 30) then (time + 1) else 0); //72
+    if (temp <= 20) {
+      heatOn' = (time != 30); //86
+    }
+    if (temp > 20) {
+      heatOff' = (time != 120); //102
+    }
+
+  }
+  invariant temp_inv : ((temp >= 20) && (temp <= 100));
+  invariant heatOn_inv : (heatOn ==> (temp <= 20));
+  invariant heatOff_inv : (heatOff ==> (temp > 20));
+  invariant time_inv : ((time >= 0) && (time <= 120));
+
+  control  {
+    v = bmc(3);
+    check;
+    print_results;
+    v.print_cex();
+  }
+}

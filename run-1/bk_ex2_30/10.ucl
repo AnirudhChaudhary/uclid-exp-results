@@ -1,3 +1,4 @@
+/*
 For a railroad crossing a control system needs to be developed that on receipt of a signal indicating that a train is approaching closes the gates, and only opens these gates after the train has sent a signal indicating that it crossed the road. The requirement that should be met by the control system is that the gates are always closed when the train is crossing the road. The complete system consists of the three components Train, Gate, and Controller:
 
 Train || Gate || Controller.
@@ -11,7 +12,7 @@ The states of the transition system for the Train have the following intuitive m
 The state changes of the Controller stand for handshaking with the trains (via the actions approach and exit) and the Gate (via the actions lower and raise via which the Controller causes the gate to close or to open, respectively).
 
 Use the variable names train_state, controller_state and gate_state.
-
+*/
 
 module RailroadCrossing {
   type Bit = boolean;
