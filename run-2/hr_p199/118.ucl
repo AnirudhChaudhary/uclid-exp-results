@@ -1,3 +1,18 @@
+/*
+You may recall the puzzle of a ferryman, goat, cabbage, and wolf all on one side of a river. The ferryman can cross the river with at most one passenger in his boat. There is a behavioural conflict between:
+1. the goat and the cabbage; and
+2. the goat and the wolf;
+if they are on the same river bank but the ferryman crosses the river or stays on the other bank.
+
+We wish to know how the ferryman can transport all goods to the other side, without any conflicts occurring.
+
+Build a model in which the states represent which goods are at which side of the river. Your model will need to have variables representing the location of the ferryman, the goat, the cabbage and the wolf and a variable that indicates what is being carried in the ferry.
+
+Define a goal state in which all goods are on the other side of the river. Write a property which checks whether this goal state is reachable without any conflicts occurring.
+
+Use the variable names ferryman, goat, cabbage, wolf and carry.
+*/
+
 module Module {
   var cabbage: boolean;
   var carry: [boolean]boolean;
@@ -7,30 +22,24 @@ module Module {
   var ferryman: boolean;
 
   init {
-    ferryman = true; //42
-    side = true; //46
-    goat = true; //50
-    cabbage = true; //54
-    wolf = true; //58
+    ferryman = true; 
+    side = true; 
+    goat = true; 
+    cabbage = true; 
+    wolf = true; 
 
   }
   next {
-    carry' = carry[false -> !carry[false]]; //71
-    ferryman' = !ferryman; //77
-    side' = !side; //83
-    goat' = (if carry[false] then !goat else goat); //96
-    cabbage' = (if carry[false] then !cabbage else cabbage); //109
-    wolf' = (if carry[false] then !wolf else wolf); //122
+    carry' = carry[false -> !carry[false]]; 
+    ferryman' = !ferryman; 
+    side' = !side; 
+    goat' = (if carry[false] then !goat else goat); 
+    cabbage' = (if carry[false] then !cabbage else cabbage); 
+    wolf' = (if carry[false] then !wolf else wolf); 
 
   }
   invariant goat_inv : (goat == side);
   invariant wolf_inv : !(((wolf == side) && (goat == side)) && (ferryman != side));
   invariant cabbage_inv : !(((cabbage == side) && (goat == side)) && (ferryman != side));
 
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

@@ -1,3 +1,14 @@
+/*
+Consider the transition systems of two traffic lights for nonintersecting (i.e., parallel) roads. It is assumed that the traffic lights switch completely independent of each other. For example, the traffic lights may be controlled by pedestrians who would like to cross the road.
+
+Model a parallel composition of two traffic lights. Model each traffic light as a simple transition system with two states, one state modeling a red light, the other one modeling a green light.
+
+
+In principle, any form of interlocking of the "actions" of the two traffic lights is possible. For instance, in the initial state where both traffic lights are red, there is a non-deterministic choice between which of the lights turns green. Note that this nondeterminism is descriptive, and does not model a scheduling problem between the traffic lights (although it may seem so).
+
+Use the variable names red1, green1, red2 and green 2.
+*/
+
 module TrafficLights {
   var green1: boolean;
   var green1_orig: boolean;
@@ -10,42 +21,42 @@ module TrafficLights {
   var red2_orig: boolean;
 
   init {
-    red1 = true; //50
-    green1 = false; //54
-    red2 = true; //58
-    green2 = false; //62
+    red1 = true; 
+    green1 = false; 
+    red2 = true; 
+    green2 = false; 
 
   }
   next {
-    havoc nondet_1; //67
-    red1_orig' = red1; //72
-    green1_orig' = green1; //77
-    red2_orig' = red2; //82
-    green2_orig' = green2; //87
+    havoc nondet_1; 
+    red1_orig' = red1; 
+    green1_orig' = green1; 
+    red2_orig' = red2; 
+    green2_orig' = green2; 
     if (red1_orig && red2_orig) {
       if (nondet_1) {
-        red1' = false; //100
-        green1' = true; //104
-        red2' = red2_orig; //109
-        green2' = green2_orig; //114
+        red1' = false; 
+        green1' = true; 
+        red2' = red2_orig; 
+        green2' = green2_orig; 
       } else {
-        red1' = red1_orig; //120
-        green1' = green1_orig; //125
-        red2' = false; //129
-        green2' = true; //133
+        red1' = red1_orig; 
+        green1' = green1_orig; 
+        red2' = false; 
+        green2' = true; 
       }
     } else {
       if (green1_orig) {
-        red1' = true; //142
-        green1' = false; //146
-        red2' = red2_orig; //151
-        green2' = green2_orig; //156
+        red1' = true; 
+        green1' = false; 
+        red2' = red2_orig; 
+        green2' = green2_orig; 
       } else {
         if (green2_orig) {
-          red1' = red1_orig; //165
-          green1' = green1_orig; //170
-          red2' = true; //174
-          green2' = false; //178
+          red1' = red1_orig; 
+          green1' = green1_orig; 
+          red2' = true; 
+          green2' = false; 
         }
       }
     }

@@ -1,3 +1,12 @@
+/*
+Consider a street junction with 4 incoming roads. Each of the 4 roads has a traffic light, which are L1, L2, L3, L4.
+The traffic light has 4 states: green, yellow, red, and amber which happen in that order.
+
+Write a model of this junction with 4 traffic lights, showing a reasonable controller C that switches the green traffic lights in the following order: L1 and L3 together, then L2, then L4.
+
+Use the variable names L1, L2, L3, L4, green, yellow, red, amber
+*/
+
 module Junction {
   type State = enum { amber, green, red, yellow };
 
@@ -8,48 +17,36 @@ module Junction {
   var L4: State;
 
   init {
-    L4 = amber; //43
-    L2 = amber; //47
-    L1 = green; //51
-    L2 = red; //55
-    L3 = green; //59
-    L4 = red; //63
+    L4 = amber; 
+    L2 = amber; 
+    L1 = green; 
+    L2 = red; 
+    L3 = green; 
+    L4 = red; 
 
   }
   next {
     if ((L1 == green) && (L3 == green)) {
-      L1' = amber; //81
-      L3' = amber; //85
+      L1' = amber; 
+      L3' = amber; 
     } else {
       if ((L1 == amber) && (L3 == amber)) {
-        L1' = red; //102
-        L3' = red; //106
-        L2' = green; //110
+        L1' = red; 
+        L3' = red; 
+        L2' = green; 
       } else {
         if (L2 == green) {
-          L2' = amber; //121
-          L4' = green; //125
+          L2' = amber; 
+          L4' = green; 
         } else {
           if (L4 == green) {
-            L4' = amber; //136
-            L1' = green; //140
-            L3' = green; //144
+            L4' = amber; 
+            L1' = green; 
+            L3' = green; 
           }
         }
       }
     }
 
-  }
-  invariant l4_inv : ((L4 == green) && (L2 == amber));
-  invariant L2_inv : (L2 == green);
-  invariant L4_inv : (L4 == green);
-  invariant L1_inv : (L1 == red);
-  invariant L3_inv : (L3 == green);
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

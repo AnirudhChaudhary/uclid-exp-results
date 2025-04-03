@@ -1,3 +1,12 @@
+/*
+Consider a stack of nonnegative integers with capacity n (for some fixed n).
+
+Model a transition system representation of this stack. You may abstract from the values on
+the stack and use the operations top, pop, and push with their usual meaning.
+
+Use the variable name s for the stack.
+*/
+
 module StackModule {
   var idx: bv32;
   var s: bv32;
@@ -5,18 +14,9 @@ module StackModule {
 
   next {
     if (idx > 0bv32) {
-      s' = (if (idx == 1bv32) then 0bv32 else s); //53
-      idx' = (idx - 1bv32); //63
+      s' = (if (idx == 1bv32) then 0bv32 else s); 
+      idx' = (idx - 1bv32); 
     }
 
-  }
-  invariant s_inv : ((s >= 0bv32) && (s <= Stack));
-  invariant idx_inv : ((idx >= 0bv32) && (idx <= Stack));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

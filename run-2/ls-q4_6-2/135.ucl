@@ -1,3 +1,11 @@
+/*
+Model the following feature for an automobile:
+
+Once the engine is started, a beeper is sounded and a red light warning is indicated if there are passengers that have not buckled their seat belt. The beeper stops sounding after 30 seconds, or as soon the seat belts are buckled, whichever is sooner. The warning light is on all the time the seat belt is un-buckled. Hint: Assume the sensors provide a warn event when the ignition is turned on and there is a seat with passenger not buckled in, or if the ignition is already on and a passenger sits in a seat without buckling the seatbelt. Assume further that the sensors provide a noWarn event when a passenger departs from a seat, or when the buckle is buckled, or when the ignition is turned off.
+
+Use the variable names warn, nowarn, time, ignitian and bucked.
+*/
+
 module Automobile {
   var buckled: boolean;
   var ignition: boolean;
@@ -11,12 +19,12 @@ module Automobile {
   input nowarn_event: boolean;
 
   init {
-    sound_beeper = false; //51
-    warning_light = false; //55
-    passenger = false; //59
-    time = 0; //63
-    ignition = false; //67
-    buckled = false; //71
+    sound_beeper = false; 
+    warning_light = false; 
+    passenger = false; 
+    time = 0; 
+    ignition = false; 
+    buckled = false; 
 
   }
   procedure step()
@@ -26,47 +34,30 @@ module Automobile {
     modifies sound_beeper;
   {
     if (warn_event && !nowarn) {
-      passenger = true; //84
+      passenger = true; 
     }
     if (nowarn_event || (warn_event && buckled)) {
-      passenger = false; //99
+      passenger = false; 
     }
     if (warn_event && !buckled) {
-      warning_light = true; //112
+      warning_light = true; 
     } else {
       if (nowarn_event || buckled) {
-        warning_light = false; //123
+        warning_light = false; 
       }
     }
     if (warn_event) {
-      time = 30; //133
-      sound_beeper = true; //137
+      time = 30; 
+      sound_beeper = true; 
     }
     if (time == 0) {
-      sound_beeper = false; //149
+      sound_beeper = false; 
     } else {
-      time = (time - 1); //157
+      time = (time - 1); 
     }
   }
 
   next {
     call step();
-  }
-  invariant warn_event_inv : (warn_event ==> (!buckled && passenger));
-  invariant nowarn_event_inv : (nowarn_event ==> (buckled || !passenger));
-  invariant buckled_inv : (!warning_light && !sound_beeper);
-  invariant ignition_inv : (!sound_beeper ==> (time == 0));
-  invariant nowarn_inv : ((!warn_event || buckled) ==> nowarn);
-  invariant time_inv : (sound_beeper == (time > 0));
-  invariant warn_inv : (warn_event ==> (!buckled && passenger));
-  invariant nowarn_inv : (nowarn_event ==> (buckled || !passenger));
-  invariant sound_beeper_inv : (sound_beeper == ((time > 0) && (warn_event && !buckled)));
-  invariant warning_light_inv : (warning_light == (warn_event && !buckled));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

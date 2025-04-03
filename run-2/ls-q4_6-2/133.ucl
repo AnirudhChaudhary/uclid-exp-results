@@ -1,3 +1,11 @@
+/*
+Model the following feature for an automobile:
+
+Once the engine is started, a beeper is sounded and a red light warning is indicated if there are passengers that have not buckled their seat belt. The beeper stops sounding after 30 seconds, or as soon the seat belts are buckled, whichever is sooner. The warning light is on all the time the seat belt is un-buckled. Hint: Assume the sensors provide a warn event when the ignition is turned on and there is a seat with passenger not buckled in, or if the ignition is already on and a passenger sits in a seat without buckling the seatbelt. Assume further that the sensors provide a noWarn event when a passenger departs from a seat, or when the buckle is buckled, or when the ignition is turned off.
+
+Use the variable names warn, nowarn, time, ignitian and bucked.
+*/
+
 module AutomobileModule {
   var buckled: boolean;
   var ignition: boolean;
@@ -7,43 +15,30 @@ module AutomobileModule {
   var red_light: boolean;
 
   init {
-    sound_beeper = false; //38
-    red_light = false; //42
+    sound_beeper = false; 
+    red_light = false; 
 
   }
   next {
     if (ignition && nowarn) {
-      sound_beeper' = true; //54
-      red_light' = true; //58
-      time' = 30; //62
+      sound_beeper' = true; 
+      red_light' = true; 
+      time' = 30; 
     } else {
       if (sound_beeper && !buckled) {
         if (time == 0) {
-          sound_beeper' = false; //80
+          sound_beeper' = false; 
         } else {
-          time' = (time - 1); //88
+          time' = (time - 1); 
         }
       } else {
         if (!buckled) {
-          red_light' = true; //98
+          red_light' = true; 
         } else {
-          red_light' = false; //103
+          red_light' = false; 
         }
       }
     }
 
-  }
-  invariant sound_beeper_inv : (((ignition && !nowarn) && !buckled) && (time > 0));
-  invariant red_light_inv : (ignition && !buckled);
-  invariant time_inv : ((time >= 0) && (time <= 30));
-  invariant ignition_inv : (ignition ==> (!nowarn || (sound_beeper || red_light)));
-  invariant nowarn_inv : (nowarn ==> (!ignition || buckled));
-  invariant buckled_inv : (buckled ==> (!sound_beeper && !red_light));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

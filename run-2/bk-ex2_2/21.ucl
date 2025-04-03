@@ -19,23 +19,17 @@ module VendingMachine {
   var coin_inserted: Bit;
 
   init {
-    assume (current_state == pay); //51
-    coin_inserted = false; //55
+    assume (current_state == pay); 
+    coin_inserted = false; 
 
   }
   next {
-    action_insert_coin' = (current_action == insert_coin); //65
-    drink_delivered' = ((current_action == get_soda) || (current_action == get_beer)); //79
-    current_action' = (if (coin_inserted) then select else current_action); //88
-    current_state' = select; //92
-    coin_inserted' = false; //96
+    action_insert_coin' = (current_action == insert_coin); 
+    drink_delivered' = ((current_action == get_soda) || (current_action == get_beer)); 
+    current_action' = (if (coin_inserted) then select else current_action); 
+    current_state' = select; 
+    coin_inserted' = false; 
 
   }
   invariant spec: (((current_action == get_soda) || (current_action == get_beer)) == coin_inserted);
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

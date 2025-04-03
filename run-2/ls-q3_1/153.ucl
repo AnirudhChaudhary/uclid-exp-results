@@ -1,15 +1,21 @@
+/*
+Model an event counter that is used in a weather station to count the number of times that a temperature rises above some threshold.
+
+Use the variable names temp and count.
+*/
+
 module EventCounter {
   var threshold: integer;
   var temp: integer;
   var count: integer;
 
   init {
-    count = 0; //26
+    count = 0; 
 
   }
   next {
     if (temp > threshold) {
-      count' = (count + 1); //42
+      count' = (count + 1); 
     }
 
   }

@@ -1,3 +1,13 @@
+/*
+Build a model for the classic dining philosophers problem:
+
+Five philosophers are sitting at a round table with a bowl of rice in the middle. For the philosophers (being a little unworldly) life consists of thinking and eating (and waiting, as we will see). To take some rice out of the bowl, a philosopher needs two chopsticks. In between two neighboring philosophers, however, there is only a single chopstick. Thus, at any time only one of two neighboring philosophers can eat. Of course, the use of the chopsticks is exclusive and eating with hands is forbidden.
+
+Write a property that checks whether deadlock is possible.
+
+Use the variable names phil1, phil2, phil3, phil4, phil5, chopstick1, chopstick2, chopstick3, chopstick4, and chopstick5
+*/
+
 module DiningPhilosophers {
   type Range = integer;
   type Philosopher = Range;
@@ -16,20 +26,20 @@ module DiningPhilosophers {
   var chopstick5: Chopstick;
 
   init {
-    phil1 = 0; //71
-    phil2 = 1; //75
-    phil3 = 2; //79
-    phil4 = 3; //83
-    phil5 = 4; //87
-    chopstick1 = 0; //91
-    chopstick2 = 1; //95
-    chopstick3 = 2; //99
-    chopstick4 = 3; //103
-    chopstick5 = 4; //107
+    phil1 = 0; 
+    phil2 = 1; 
+    phil3 = 2; 
+    phil4 = 3; 
+    phil5 = 4; 
+    chopstick1 = 0; 
+    chopstick2 = 1; 
+    chopstick3 = 2; 
+    chopstick4 = 3; 
+    chopstick5 = 4; 
 
   }
   next {
-    deadlocked' = ((phil3 == phil5) && (phil2 == phil4)); //125
+    deadlocked' = ((phil3 == phil5) && (phil2 == phil4)); 
 
   }
   invariant phil1_inv : ((phil1 == 0) || (phil1 == 1));
@@ -44,10 +54,4 @@ module DiningPhilosophers {
   invariant chopstick5_inv : ((chopstick5 == 0) || (chopstick5 == 1));
   invariant deadlocked_inv : (deadlocked != ((phil3 == phil5) && (phil2 == phil4)));
 
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

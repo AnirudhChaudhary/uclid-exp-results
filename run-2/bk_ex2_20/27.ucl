@@ -1,26 +1,30 @@
+/*
+Regard the program graph for the instructions A and B of the parallel program below, where action A is on the left of the ||| and action B is on the right:
+
+x:=2*x ||| x:=x+1
+
+We assume that initially x=3.
+
+Build a model of this transition system, with a shared variable and two actions that act on the same shared variable x.
+
+Use the variable name x. 
+*/
+
 module Module {
   var x: bv8;
 
   init {
-    x = 3bv8; //22
+    x = 3bv8; 
 
   }
   procedure step()
     modifies x;
   {
-    x = (2bv8 * x); //34
-    x = (x + 1bv8); //44
+    x = (2bv8 * x); 
+    x = (x + 1bv8); 
   }
 
   next {
     call step();
-  }
-  invariant x_inv : true;
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

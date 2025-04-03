@@ -14,13 +14,13 @@ module Module {
   var aux: boolean;
 
   init {
-    status = ready; //28
+    status = ready; 
 
   }
   next {
     if (request) {
-      aux' = true; //37
-      status' = busy; //41
+      aux' = true; 
+      status' = busy; 
     }
 
   }

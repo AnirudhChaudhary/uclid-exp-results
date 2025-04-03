@@ -1,3 +1,20 @@
+/*
+Consider the following leader election algorithm: For n ∈ N, n processes P1,...,Pn are located in a ring topology where each process is connected by an unidirectional channel to its neighbor in a clockwise manner.
+
+To distinguish the processes, each process is assigned a unique identifier id  in {1, . . . , n}. The aim is to elect the process with the highest identifier as the leader within the ring. Therefore each process executes the following algorithm:
+
+send (id);
+while (true) do
+receive (m);
+if (m = id) then stop;
+if (m > id) then send (m);
+od
+
+Model the leader election protocol for n processes as a channel system.
+
+Use the variable names m, id
+*/
+
 module LeaderElection {
   var send: [integer]integer;
   var n: integer;
@@ -8,11 +25,11 @@ module LeaderElection {
   output leader: integer;
 
   init {
-    received = 0; //43
-    id = 1; //47
-    leader =  -1; //52
-    n = id; //57
-    m = id; //62
+    received = 0; 
+    id = 1; 
+    leader =  -1; 
+    n = id; 
+    m = id; 
 
   }
   procedure step()
@@ -20,28 +37,17 @@ module LeaderElection {
     modifies received;
     modifies leader;
   {
-    send = send[id -> id]; //73
-    received = send[(id - 1)]; //83
+    send = send[id -> id]; 
+    received = send[(id - 1)]; 
     if (received == id) {
-      leader = id; //95
+      leader = id; 
     }
     if (received > id) {
-      send = send[id -> received]; //113
+      send = send[id -> received]; 
     }
   }
 
   next {
     call step();
-  }
-  invariant id_inv : ((id >= 1) && (id <= n));
-  invariant m_inv : ((m == id) || ((m >= 1) && (m <= n)));
-  invariant received_inv : ((received >= 1) && (received <= n));
-  invariant leader_inv : (if (received == id) then (leader == id) else ((leader ==  -1) || (leader == id)));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

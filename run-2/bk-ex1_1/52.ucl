@@ -1,3 +1,18 @@
+/*
+Build a model of a concurrent program, in which three processes, Inc, Dec, and Reset, cooperate. They operate on the shared integer variable x with arbitrary initial value that can be accessed (i.e., read), and modified (i.e., written) by each of the individual processes.
+
+The processes are:
+proc Inc = while true do if x<200 then x:=x+1 fi od
+proc Dec = while true do if x>0 then x:= x−1 fi od
+proc Reset = while true do if x=200 then x:=0 fi od
+
+Process Inc increments x if its value is smaller than 200, Dec decrements x if its value is at least 1, and Reset resets x once it has reached the value 200. They all do so repetitively.
+
+Write an invariant that checks if the value of x is always between (and including) 0 and 200.
+
+Use the variable name x.
+*/
+
 module Module {
   var x: integer;
 
@@ -6,19 +21,13 @@ module Module {
   instance Reset: Reset();
 
   invariant spec: ((x >= 0) && (x <= 200));
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }
 module Inc {
   var x: integer;
 
   next {
     if (x < 200) {
-      x' = (x + 1); //66
+      x' = (x + 1); 
     }
 
   }
@@ -28,7 +37,7 @@ module Dec {
 
   next {
     if (x > 0) {
-      x' = (x - 1); //99
+      x' = (x - 1); 
     }
 
   }
@@ -38,7 +47,7 @@ module Reset {
 
   next {
     if (x == 200) {
-      x' = 0; //129
+      x' = 0; 
     }
 
   }

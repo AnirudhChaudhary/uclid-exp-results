@@ -17,8 +17,8 @@ module SynchronousComposition {
   var y1: boolean;
 
   next {
-    y1' = r1; //24
-    r1' = !r1; //30
+    y1' = r1; 
+    r1' = !r1; 
 
   }
 }

@@ -1,20 +1,41 @@
+/*
+We are given three (primitive) processes P1,P2, and P3 with shared integer variable x. The program of each process is as follows:
+
+for x = 1,...,10 do
+ LOAD(x);
+ INC(x);
+ STORE(x);
+od
+
+That is, each process executes ten times the assignment x:=x+1.
+
+The assignment x := x+1 is realized using the three actions LOAD(x), INC(x) and STORE(x). Consider now the parallel program:
+
+x := 0;
+P1 || P2 || P3
+
+Build a model of the parallel program. Write a property that checks if P has an execution that halts with the terminal value x=2.
+
+Use the variable name x
+*/
+
 module Process {
   var x: integer;
   var i: integer;
 
   init {
-    x = 0; //22
-    i = 0; //26
+    x = 0; 
+    i = 0; 
 
   }
   procedure step()
     modifies i;
     modifies x;
   {
-    i = (i + 1); //35
+    i = (i + 1); 
     if (i <= 10) {
-      x = (x + 1); //48
-      i = (i + 1); //55
+      x = (x + 1); 
+      i = (i + 1); 
     }
   }
 
@@ -30,16 +51,11 @@ module ParallelProgram {
   instance p3: Process();
 
   next {
-    next(p1); //88
-    next(p2); //91
-    next(p3); //94
+    next(p1); 
+    next(p2); 
+    next(p3); 
 
   }
   invariant spec: (x == 2);
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
+
 }

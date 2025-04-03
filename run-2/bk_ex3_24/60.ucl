@@ -1,3 +1,11 @@
+/*
+Model a beverage vending machine which dispenses drinks on receipt of coins.
+
+Add a safety property that checks that the number of inserted coins is always at least the number of dispensed drinks. You may add auxiliary variables.
+
+Use the variable names coin and dispensed_drinks
+*/
+
 module BeverageVendingMachine {
   var coin: integer;
   var coin_prev: integer;
@@ -6,33 +14,26 @@ module BeverageVendingMachine {
   var safety_property: boolean;
 
   init {
-    coin_prev = 0; //34
-    dispensed_prev = 0; //38
-    coin = 0; //42
-    dispensed_drinks = 0; //46
-    safety_property = (coin >= dispensed_drinks); //55
+    coin_prev = 0; 
+    dispensed_prev = 0; 
+    coin = 0; 
+    dispensed_drinks = 0; 
+    safety_property = (coin >= dispensed_drinks); 
 
   }
   next {
-    coin_prev' = coin; //62
-    dispensed_prev' = dispensed_drinks; //67
+    coin_prev' = coin; 
+    dispensed_prev' = dispensed_drinks; 
     if (coin_prev < coin) {
-      coin' = (coin_prev + 1); //81
+      coin' = (coin_prev + 1); 
     }
     if (dispensed_prev < dispensed_drinks) {
-      dispensed_drinks' = (dispensed_prev + 1); //97
+      dispensed_drinks' = (dispensed_prev + 1); 
     }
-    safety_property' = (coin >= dispensed_drinks); //108
+    safety_property' = (coin >= dispensed_drinks); 
 
   }
   invariant coin_inv : (coin >= 0);
   invariant dispensed_drinks_inv : (dispensed_drinks >= 0);
   invariant safety_property_inv : (safety_property == (coin >= dispensed_drinks));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

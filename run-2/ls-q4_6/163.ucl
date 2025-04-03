@@ -1,3 +1,11 @@
+/*
+Model the following feature for an automobile:
+
+A dome light that is turned on as soon as any door is opened. It stays on for 30 seconds after all doors are shut.
+
+Use the variable names light_on, door_open, time
+*/
+
 module Module {
   var Boolean: boolean;
   var Integer: integer;
@@ -6,33 +14,21 @@ module Module {
   var timer: integer;
 
   init {
-    light_on = false; //34
-    timer = 0; //38
+    light_on = false; 
+    timer = 0; 
 
   }
   next {
     if (door_open) {
-      light_on' = true; //47
-      timer' = 30; //51
+      light_on' = true; 
+      timer' = 30; 
     } else {
       if (timer > 0) {
-        timer' = (timer - 1); //65
+        timer' = (timer - 1); 
       } else {
-        light_on' = false; //70
+        light_on' = false; 
       }
     }
 
-  }
-  invariant door_open_inv : (door_open == Boolean);
-  invariant light_on_inv : (light_on == Boolean);
-  invariant timer_inv : (timer == Integer);
-  invariant light_on_inv : (light_on == (door_open || (timer > 0)));
-  invariant timer_inv : ((timer >= 0) && (timer <= 30));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

@@ -1,3 +1,12 @@
+/*
+Consider a street junction with 4 incoming roads. Each of the 4 roads has a traffic light, which are L1, L2, L3, L4.
+The traffic light has 4 states: green, yellow, red, and amber which happen in that order.
+
+Write a model of this junction with 4 traffic lights, showing a reasonable controller C that switches the green traffic lights in the following order: L1 and L3 together, then L2, then L4.
+
+Use the variable names L1, L2, L3, L4, green, yellow, red, amber
+*/
+
 module TrafficLights {
   type Range = bv2;
   type state = integer;
@@ -8,42 +17,31 @@ module TrafficLights {
   var L4: state;
 
   init {
-    L1 = 1; //40
-    L2 = 2; //44
-    L3 = 1; //48
-    L4 = 2; //52
+    L1 = 1; 
+    L2 = 2; 
+    L3 = 1; 
+    L4 = 2; 
 
   }
   next {
     if ((L1 == 1) && (L3 == 1)) {
-      L1' = 3; //70
-      L3' = 3; //74
+      L1' = 3; 
+      L3' = 3; 
     } else {
       if ((L1 == 3) && (L3 == 3)) {
-        L1' = 4; //91
-        L3' = 4; //95
-        L2' = 1; //99
+        L1' = 4; 
+        L3' = 4; 
+        L2' = 1; 
       } else {
         if (L2 == 1) {
-          L2' = 3; //110
+          L2' = 3; 
         } else {
           if (L4 == 2) {
-            L4' = 1; //121
+            L4' = 1; 
           }
         }
       }
     }
 
-  }
-  invariant L1_inv : ((L1 == 1) ==> (L3 == 1));
-  invariant L2_inv : ((L2 != 1) ==> (L2 == 3));
-  invariant L3_inv : ((L3 == 1) ==> (L1 == 1));
-  invariant L4_inv : ((L4 == 2) || (L4 == 1));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

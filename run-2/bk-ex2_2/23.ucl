@@ -1,3 +1,13 @@
+/*
+Model a preliminary design of a beverage vending machine. The machine can either deliver beer or soda.
+
+The state space is S = { pay , select , soda , beer }. The set of initial states consists of only one state, i.e., I = { pay }. The (user) action insert coin denotes the insertion of a coin, while the (machine) actions get soda and get beer denote the delivery of soda and beer, respectively.
+
+Use the variable names pay, select, soda and beer.
+
+Write an LTL property that checks that the vending machine only delivers a drink after being provided with a coin. You may introduce auxiliary variables to do this if you need to.
+*/
+
 module BeverageVendingMachine {
   type Range = enum { beer, pay, select, soda };
 
@@ -12,8 +22,8 @@ module BeverageVendingMachine {
   input get_beer: boolean;
 
   init {
-    current_state = pay; //56
-    coin_inserted = false; //60
+    current_state = pay; 
+    coin_inserted = false; 
 
   }
   procedure step()
@@ -21,19 +31,19 @@ module BeverageVendingMachine {
     modifies current_state;
     modifies coin_inserted;
   {
-    coin_inserted = (coin_inserted || insert_coin); //70
+    coin_inserted = (coin_inserted || insert_coin); 
     if ((current_state == pay) && !coin_inserted) {
-      no_response = true; //84
-      assert no_response; //87
+      no_response = true; 
+      assert no_response; 
     }
     if (insert_coin) {
-      current_state = select; //96
+      current_state = select; 
     }
     if (get_soda && coin_inserted) {
-      current_state = soda; //108
+      current_state = soda; 
     }
     if (get_beer && coin_inserted) {
-      current_state = beer; //120
+      current_state = beer; 
     }
   }
 
@@ -46,10 +56,4 @@ module BeverageVendingMachine {
   invariant next_inv : (insert_coin ==> ((current_state == select) && (coin_inserted == true)));
   invariant drink_delivered : ((current_state == soda) || (current_state == beer));
 
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

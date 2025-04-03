@@ -1,3 +1,23 @@
+/*
+The following program is a mutual exclusion protocol for two processes due to Pnueli. There is a single shared variable s which is either 0 or 1, and initially 1. Besides, each process has a local Boolean variable y that initially equals 0. The program text for each process Pi (i=0,1) is as follows:
+
+l0: loop forever do begin
+l1: Noncritical section
+l2: (yi, s) := (1, i);
+l3: wait until ((y1−i = 0) ∨ (s ̸= i)); l4: Critical section
+l5: yi := 0
+end.
+
+
+Here, the statement (yi, s) := (1, i); is a multiple assignment in which variable yi := 1 and s := i is a single, atomic step.
+
+Model a parallel composition of P0 and P1.
+
+Write a property that checks whether the algorithm ensures mutual exclusion and a property that checks whether the algorithm ensures starvation freedom.
+
+Use the variable names given in the text.
+*/
+
 module MutualExclusion {
   var s_n: bv1;
   var s_o: bv1;
@@ -7,25 +27,25 @@ module MutualExclusion {
   var y1: bv1;
 
   init {
-    s = 1bv1; //47
-    y0 = 0bv1; //54
-    y1 = 0bv1; //61
+    s = 1bv1; 
+    y0 = 0bv1; 
+    y1 = 0bv1; 
 
   }
   next {
-    s_tmp' = s; //68
+    s_tmp' = s; 
     if (s_tmp == 0bv1) {
-      s_o' = 1bv1; //84
-      s_n' = 0bv1; //91
+      s_o' = 1bv1; 
+      s_n' = 0bv1; 
     } else {
       if (s_tmp == 1bv1) {
-        s_o' = 0bv1; //108
-        s_n' = 1bv1; //115
+        s_o' = 0bv1; 
+        s_n' = 1bv1; 
       }
     }
-    s' = s_n; //123
-    y0' = 0bv1; //130
-    y1' = 0bv1; //137
+    s' = s_n; 
+    y0' = 0bv1; 
+    y1' = 0bv1; 
 
   }
   invariant s_inv : ((s == 0bv1) || (s == 1bv1));
@@ -34,10 +54,4 @@ module MutualExclusion {
   invariant mutual_exclusion_inv : (((y0 == 1bv1) ==> (y1 == 0bv1)) && ((y1 == 1bv1) ==> (y0 == 0bv1)));
   invariant starvation_freedom_inv : (((y0 == 1bv1) ==> (y1 == 0bv1)) || ((y1 == 1bv1) ==> (y0 == 0bv1)));
 
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

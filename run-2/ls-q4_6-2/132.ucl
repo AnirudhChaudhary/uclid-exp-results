@@ -1,3 +1,11 @@
+/*
+Model the following feature for an automobile:
+
+Once the engine is started, a beeper is sounded and a red light warning is indicated if there are passengers that have not buckled their seat belt. The beeper stops sounding after 30 seconds, or as soon the seat belts are buckled, whichever is sooner. The warning light is on all the time the seat belt is un-buckled. Hint: Assume the sensors provide a warn event when the ignition is turned on and there is a seat with passenger not buckled in, or if the ignition is already on and a passenger sits in a seat without buckling the seatbelt. Assume further that the sensors provide a noWarn event when a passenger departs from a seat, or when the buckle is buckled, or when the ignition is turned off.
+
+Use the variable names warn, nowarn, time, ignitian and bucked.
+*/
+
 module Module {
   var warn: boolean;
   var nowarn: boolean;
@@ -6,11 +14,11 @@ module Module {
   var buckled: boolean;
 
   init {
-    warn = false; //34
-    nowarn = false; //38
-    time = 0; //42
-    ignition = false; //46
-    buckled = false; //50
+    warn = false; 
+    nowarn = false; 
+    time = 0; 
+    ignition = false; 
+    buckled = false; 
 
   }
   procedure step()
@@ -19,19 +27,19 @@ module Module {
     modifies warn;
   {
     if (warn) {
-      time = (time + 1); //62
+      time = (time + 1); 
     }
     if (!ignition) {
-      warn = false; //72
-      nowarn = false; //76
-      time = 0; //80
+      warn = false; 
+      nowarn = false; 
+      time = 0; 
     } else {
       if ((ignition && !buckled) && !nowarn) {
-        warn = true; //96
+        warn = true; 
       } else {
         if (ignition && buckled) {
-          warn = false; //107
-          nowarn = true; //111
+          warn = false; 
+          nowarn = true; 
         }
       }
     }
@@ -39,12 +47,5 @@ module Module {
 
   next {
     call step();
-  }
-  invariant spec: ((warn || nowarn) && (time <= 30));
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

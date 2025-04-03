@@ -1,3 +1,19 @@
+/*
+For a railroad crossing a control system needs to be developed that on receipt of a signal indicating that a train is approaching closes the gates, and only opens these gates after the train has sent a signal indicating that it crossed the road. The requirement that should be met by the control system is that the gates are always closed when the train is crossing the road. The complete system consists of the three components Train, Gate, and Controller:
+
+Train || Gate || Controller.
+
+
+Model this system. You can assume that all trains pass the relevant track section in the same direction.
+
+
+Detail:
+The states of the transition system for the Train have the following intuitive meaning: in state "far" the train is not close to the crossing, in state "near" it is approaching the crossing and has just sent a signal to notify this, and in state "in" it is at the crossing. The states "up" and "down" of the Gate have the obvious interpretation. The controller has 4 states 0, 1, 2 and 3. It changes from state 0 to 1 when the train is approaching, from state 1 to 2 when the gate is lowering, from state 2 to 3 when the train is exiting the crossing, and from state 3 to 0 when the gate is raising.
+The state changes of the Controller stand for handshaking with the trains (via the actions approach and exit) and the Gate (via the actions lower and raise via which the Controller causes the gate to close or to open, respectively).
+
+Use the variable names train_state, controller_state and gate_state.
+*/
+
 module RailroadCrossing {
   var approaching: boolean;
   var gate_lowered: boolean;
@@ -8,26 +24,19 @@ module RailroadCrossing {
   var gate_state: bv1;
 
   init {
-    train_state = 0bv2; //48
-    controller_state = 0bv2; //55
-    gate_state = 0bv1; //62
+    train_state = 0bv2; 
+    controller_state = 0bv2; 
+    gate_state = 0bv1; 
 
   }
   next {
-    approaching' = (train_state == 1bv2); //75
-    near_gate' = (controller_state == 2bv2); //86
-    train_passed' = (controller_state == 3bv2); //97
-    gate_lowered' = (controller_state == 1bv2); //108
-    train_state' = (if (approaching) then 2bv2 else (if (train_passed) then 1bv2 else train_state)); //127
-    controller_state' = (if (approaching) then 1bv2 else (if (gate_lowered) then 2bv2 else (if (train_passed) then 3bv2 else controller_state))); //153
-    gate_state' = (if (near_gate) then 1bv1 else (if (train_passed) then 0bv1 else gate_state)); //172
+    approaching' = (train_state == 1bv2); 
+    near_gate' = (controller_state == 2bv2); 
+    train_passed' = (controller_state == 3bv2); 
+    gate_lowered' = (controller_state == 1bv2); 
+    train_state' = (if (approaching) then 2bv2 else (if (train_passed) then 1bv2 else train_state)); 
+    controller_state' = (if (approaching) then 1bv2 else (if (gate_lowered) then 2bv2 else (if (train_passed) then 3bv2 else controller_state))); 
+    gate_state' = (if (near_gate) then 1bv1 else (if (train_passed) then 0bv1 else gate_state)); 
 
-  }
-  invariant spec: ((train_state != 2bv2) || (gate_state != 1bv1));
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

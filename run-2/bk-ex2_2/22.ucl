@@ -1,39 +1,49 @@
+/*
+Model a preliminary design of a beverage vending machine. The machine can either deliver beer or soda.
+
+The state space is S = { pay , select , soda , beer }. The set of initial states consists of only one state, i.e., I = { pay }. The (user) action insert coin denotes the insertion of a coin, while the (machine) actions get soda and get beer denote the delivery of soda and beer, respectively.
+
+Use the variable names pay, select, soda and beer.
+
+Write an LTL property that checks that the vending machine only delivers a drink after being provided with a coin. You may introduce auxiliary variables to do this if you need to.
+*/
+
 module VendingMachine {
   var coin_inserted: boolean;
   var drink_delivered: boolean;
   var current_state: enum { beer, pay, select, soda };
 
   init {
-    coin_inserted = false; //30
-    drink_delivered = false; //34
-    current_state = pay; //38
+    coin_inserted = false; 
+    drink_delivered = false; 
+    current_state = pay; 
 
   }
   next {
     if (current_state == pay) {
       if (coin_inserted) {
-        current_state' = select; //53
+        current_state' = select; 
       }
     } else {
       if (current_state == select) {
         if (coin_inserted) {
           if (drink_delivered) {
-            drink_delivered' = false; //72
+            drink_delivered' = false; 
             if (current_state == soda) {
-              current_state' = pay; //82
+              current_state' = pay; 
             } else {
               if (current_state == beer) {
-                current_state' = pay; //93
+                current_state' = pay; 
               }
             }
           }
         }
       } else {
         if (current_state == soda) {
-          drink_delivered' = true; //111
+          drink_delivered' = true; 
         } else {
           if (current_state == beer) {
-            drink_delivered' = true; //122
+            drink_delivered' = true; 
           }
         }
       }
@@ -48,10 +58,4 @@ module VendingMachine {
   invariant soda_inv : !((current_state == soda) && !coin_inserted);
   invariant beer_inv : !((current_state == beer) && !coin_inserted);
 
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

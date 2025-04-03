@@ -29,7 +29,7 @@ module TrafficLights {
   output sR: Bit;
 
   init {
-    state = b0; //57
+    state = b0; 
 
   }
   procedure step()
@@ -42,37 +42,30 @@ module TrafficLights {
     modifies sR;
   {
     if (state == b0) {
-      mG = b1; //71
-      mY = b0; //76
-      mR = b0; //81
-      sG = b0; //86
-      sY = b0; //91
-      sR = b1; //96
+      mG = b1; 
+      mY = b0; 
+      mR = b0; 
+      sG = b0; 
+      sY = b0; 
+      sR = b1; 
       if (sY == b1) {
-        state = b1; //108
+        state = b1; 
       }
     }
     if (state == b1) {
-      mG = b0; //124
-      mY = b1; //129
-      mR = b0; //134
-      sG = b0; //139
-      sY = b0; //144
-      sR = b1; //149
+      mG = b0; 
+      mY = b1; 
+      mR = b0; 
+      sG = b0; 
+      sY = b0; 
+      sR = b1; 
       if (sY == b1) {
-        state = b0; //161
+        state = b0; 
       }
     }
   }
 
   next {
     call step();
-  }
-  invariant spec: (mG ==> (!sG && !sY));
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

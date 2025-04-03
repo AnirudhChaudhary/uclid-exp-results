@@ -25,59 +25,46 @@ module TrafficLight {
   var sec_detected: boolean;
 
   init {
-    State = 50; //46
-    mG = true; //50
-    mY = false; //54
-    mR = false; //58
-    sG = false; //62
-    sY = false; //66
-    sR = true; //70
-    sec_detected = false; //74
+    State = 50; 
+    mG = true; 
+    mY = false; 
+    mR = false; 
+    sG = false; 
+    sY = false; 
+    sR = true; 
+    sec_detected = false; 
 
   }
   next {
     if (sR) {
-      sR' = true; //83
-      sG' = false; //87
+      sR' = true; 
+      sG' = false; 
     } else {
       if (sG) {
-        sG' = true; //95
-        sY' = false; //99
+        sG' = true; 
+        sY' = false; 
       } else {
         if (sY) {
-          sY' = true; //107
-          sR' = false; //111
+          sY' = true; 
+          sR' = false; 
         }
       }
     }
     if (State == 0) {
-      mR' = true; //125
-      mG' = false; //129
-      mY' = false; //133
+      mR' = true; 
+      mG' = false; 
+      mY' = false; 
       if (sec_detected) {
-        State' = 1; //140
+        State' = 1; 
       }
     } else {
       if (State == 3) {
-        mR' = false; //153
-        mG' = false; //157
-        mY' = true; //161
-        State' = 0; //165
+        mR' = false; 
+        mG' = false; 
+        mY' = true; 
+        State' = 0; 
       }
     }
 
-  }
-  invariant mG_inv : ((mG && sR) || (!mG && !sR));
-  invariant mY_inv : ((mY && sR) || (!mY && !sR));
-  invariant mR_inv : (((mR || sG) || sY) && !sR);
-  invariant sG_inv : ((sG && mR) || (!sG && !mR));
-  invariant sY_inv : ((sY && mR) || (!sY && !mR));
-  invariant sR_inv : (!sR || (mG || mY));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

@@ -44,12 +44,12 @@ module VendingMachine {
   var coin: boolean;
 
   init {
-    nsoda = 0; //58
-    nbeer = 0; //62
-    sget = false; //66
-    bget = false; //70
-    refill = false; //74
-    coin = false; //78
+    nsoda = 0; 
+    nbeer = 0; 
+    sget = false; 
+    bget = false; 
+    refill = false; 
+    coin = false; 
 
   }
   procedure step()
@@ -65,49 +65,42 @@ module VendingMachine {
     modifies bget_enabled;
     modifies bget;
   {
-    coin_enabled = true; //84
-    refill_enabled = true; //88
-    sget_enabled = (nsoda > 0); //96
-    bget_enabled = (nbeer > 0); //104
-    ret_coin_enabled = ((nsoda == 0) && (nbeer == 0)); //118
+    coin_enabled = true; 
+    refill_enabled = true; 
+    sget_enabled = (nsoda > 0); 
+    bget_enabled = (nbeer > 0); 
+    ret_coin_enabled = ((nsoda == 0) && (nbeer == 0)); 
     if (coin_enabled) {
-      coin = true; //125
+      coin = true; 
     } else {
-      coin = false; //130
+      coin = false; 
     }
     if (refill_enabled) {
-      refill = true; //138
+      refill = true; 
     } else {
-      refill = false; //143
+      refill = false; 
     }
     if (sget_enabled) {
-      sget = true; //151
+      sget = true; 
     } else {
-      sget = false; //156
+      sget = false; 
     }
     if (bget_enabled) {
-      bget = true; //164
+      bget = true; 
     } else {
-      bget = false; //169
+      bget = false; 
     }
     if (ret_coin_enabled) {
-      coin = false; //177
-      refill = false; //181
-      sget = false; //185
-      bget = false; //189
-      nsoda = 0; //193
-      nbeer = 0; //197
+      coin = false; 
+      refill = false; 
+      sget = false; 
+      bget = false; 
+      nsoda = 0; 
+      nbeer = 0; 
     }
   }
 
   next {
     call step();
-  }
-  invariant spec: true;
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

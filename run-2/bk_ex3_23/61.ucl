@@ -13,28 +13,28 @@ module TrafficLight {
   var prev: boolean;
 
   init {
-    red = false; //30
-    green = false; //34
-    yellow = true; //38
-    prev = false; //42
+    red = false; 
+    green = false; 
+    yellow = true; 
+    prev = false; 
 
   }
   next {
     if (yellow) {
-      prev' = true; //51
-      yellow' = false; //55
-      green' = true; //59
+      prev' = true; 
+      yellow' = false; 
+      green' = true; 
     } else {
       if (green) {
-        prev' = false; //67
-        green' = false; //71
-        red' = true; //75
+        prev' = false; 
+        green' = false; 
+        red' = true; 
       } else {
         if (red) {
-          assert prev; //82
-          prev' = false; //86
-          red' = false; //90
-          yellow' = true; //94
+          assert prev; 
+          prev' = false; 
+          red' = false; 
+          yellow' = true; 
         }
       }
     }

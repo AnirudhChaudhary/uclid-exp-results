@@ -1,16 +1,28 @@
+/* 
+Regard the program graph for the instructions A and B of the parallel program below, where action A is on the left of the ||| and action B is on the right:
+
+x:=2*x ||| x:=x+1
+
+We assume that initially x=3.
+
+Build a model of this transition system, with a shared variable and two actions that act on the same shared variable x.
+
+Use the variable name x. 
+*/
+
 module ParallelProgram {
   var left_action: integer;
   var right_action: integer;
   var x: integer;
 
   init {
-    x = 3; //26
+    x = 3; 
 
   }
   next {
-    left_action' = (x * 2); //35
-    right_action' = (x + 1); //42
-    x' = (if (x < right_action) then left_action else right_action); //56
+    left_action' = (x * 2); 
+    right_action' = (x + 1); 
+    x' = (if (x < right_action) then left_action else right_action); 
 
   }
 }

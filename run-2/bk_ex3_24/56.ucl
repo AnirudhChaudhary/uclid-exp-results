@@ -15,19 +15,13 @@ module BeverageVendingMachine {
   var dispensed_drinks: integer;
 
   init {
-    coin = 0; //35
-    dispensed_drinks = 0; //39
+    coin = 0; 
+    dispensed_drinks = 0; 
 
   }
   next {
-    dispensed_drinks' = (dispensed_drinks + drinks_dispensed); //49
+    dispensed_drinks' = (dispensed_drinks + drinks_dispensed); 
 
   }
   invariant spec: (coin >= dispensed_drinks);
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

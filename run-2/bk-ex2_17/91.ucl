@@ -9,25 +9,18 @@ module TrafficLight {
   var red: boolean;
 
   init {
-    red = true; //22
-    green = false; //26
+    red = true; 
+    green = false; 
 
   }
   next {
     if (red) {
-      red' = false; //35
-      green' = true; //39
+      red' = false; 
+      green' = true; 
     } else {
-      red' = true; //44
-      green' = false; //48
+      red' = true; 
+      green' = false; 
     }
 
-  }
-  invariant spec: !red;
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

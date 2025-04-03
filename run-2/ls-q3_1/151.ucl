@@ -10,22 +10,13 @@ module EventCounter {
   var count: integer;
 
   init {
-    count = 0; //26
+    count = 0; 
 
   }
   next {
     if (temp > threshold) {
-      count' = (count + 1); //42
+      count' = (count + 1); 
     }
 
-  }
-  invariant temp_inv : (temp >= 0.0);
-  invariant count_inv : (count >= 0);
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

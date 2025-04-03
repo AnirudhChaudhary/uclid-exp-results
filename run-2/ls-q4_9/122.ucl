@@ -32,68 +32,55 @@ module TrafficLights {
   output sR: Bit;
 
   init {
-    time = 0; //70
-    main_light = 2; //74
-    secondary_light = 2; //78
-    main_state = anon_enum_3; //82
+    time = 0; 
+    main_light = 2; 
+    secondary_light = 2; 
+    main_state = anon_enum_3; 
 
   }
   next {
-    time' = (time + 1); //91
+    time' = (time + 1); 
     if (main_state == anon_enum_3) {
       if (time == 0) {
-        main_light' = 0; //107
-        secondary_light' = 2; //111
+        main_light' = 0; 
+        secondary_light' = 2; 
       } else {
         if (time == (3 * 60)) {
-          main_light' = 1; //124
-          secondary_light' = 2; //128
+          main_light' = 1; 
+          secondary_light' = 2; 
         } else {
           if (time == ((3 * 60) + 5)) {
-            main_light' = 2; //143
+            main_light' = 2; 
           }
         }
       }
     } else {
       if (main_light == 0) {
         if (time < 50) {
-          main_light' = 0; //164
-          secondary_light' = 2; //168
+          main_light' = 0; 
+          secondary_light' = 2; 
         } else {
           if (time < (3 * 60)) {
-            main_light' = 1; //181
+            main_light' = 1; 
           } else {
-            main_light' = 2; //186
+            main_light' = 2; 
           }
         }
       } else {
         if (time == 0) {
-          main_light' = 1; //199
-          secondary_light' = 2; //203
+          main_light' = 1; 
+          secondary_light' = 2; 
         } else {
           if (time == 5) {
-            main_light' = 1; //214
+            main_light' = 1; 
           } else {
             if (time == 10) {
-              main_light' = 2; //225
+              main_light' = 2; 
             }
           }
         }
       }
     }
 
-  }
-  invariant mG_inv : (((main_light == 0) && (secondary_light == 2)) ==> (sR && (!sG && !sY)));
-  invariant mY_inv : (((main_light == 1) && (secondary_light == 2)) ==> (sR && (!sG && !sY)));
-  invariant mR_inv : (((main_light == 2) && (secondary_light == 2)) ==> (sR && (!sG && !sY)));
-  invariant sG_inv : (((secondary_light == 0) && (main_light != 0)) ==> (mR && (!mG && !mY)));
-  invariant sY_inv : (((secondary_light == 1) && (main_light != 0)) ==> (mR && (!mG && !mY)));
-  invariant sR_inv : (((secondary_light == 2) && (main_light != 0)) ==> (mR && (!mG && !mY)));
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

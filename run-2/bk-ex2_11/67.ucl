@@ -1,3 +1,24 @@
+/*
+Consider the circuit diagram of the sequential circuit with input variable x, output variable y, and register r.
+
+The output variable y is given by the negation of x xor r.
+
+The register evaluation r changes according to the circuit function next_r = x OR r.
+
+Note that once the register evaluation is [r = 1], r keeps that value.
+
+Model the circuit behaviour with a transition system where each state corresponds to an evaluation of x and r, and the initial valuation of r is 0.
+
+There are two initial states:
+S1: x=0, r=0
+S2: x=1, r=0
+
+
+Write an LTL property that checks that the output bit y is set infinitely often. You may use auxiliary variables.
+
+Use the variable names x, y and r.
+*/
+
 module SequentialCircuit {
   var next_r: boolean;
   var r: boolean;
@@ -7,23 +28,16 @@ module SequentialCircuit {
   output y: boolean;
 
   init {
-    r = false; //32
+    r = false; 
 
   }
   next {
-    next_r' = (x || r); //42
-    y' = !(x ^ r); //52
-    r' = (r ==> next_r); //61
+    next_r' = (x || r); 
+    y' = !(x ^ r); 
+    r' = (r ==> next_r); 
 
   }
   invariant r_inv : (r ==> true);
   invariant x_inv : (!x ==> x);
   invariant y_inv : !(x ^ r);
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }

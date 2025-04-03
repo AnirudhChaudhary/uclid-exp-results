@@ -1,3 +1,11 @@
+/*
+Model a system that counts the number of cars that enter and leave a parking garage in order to keep track of how many cars are in the garage at any time.
+
+Assume that an ArrivalDetector actor produces an event when a car arrives, and a DepartureDetector actor produces an event when a car departs. The Counter actor keeps a running count, starting from an initial value i. Each time the count changes, it produces an output event that updates a display.
+
+Use the variable names arrival, departure and counter
+*/
+
 module Module {
   var counter_prime: integer;
   var counter: integer;
@@ -6,8 +14,8 @@ module Module {
   var display: integer;
 
   init {
-    counter = 0; //34
-    display = counter; //39
+    counter = 0; 
+    display = counter; 
 
   }
   procedure step()
@@ -15,25 +23,15 @@ module Module {
     modifies counter;
   {
     if (arrival) {
-      counter = (counter + 1); //51
+      counter = (counter + 1); 
     }
     if (departure) {
-      counter = (counter - 1); //63
+      counter = (counter - 1); 
     }
-    display = counter; //70
+    display = counter; 
   }
 
   next {
     call step();
-  }
-  invariant arrival_inv : (arrival ==> (counter == (counter_prime + 1)));
-  invariant departure_inv : (departure ==> (counter == (counter_prime - 1)));
-  invariant counter_inv : (counter >= 0);
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

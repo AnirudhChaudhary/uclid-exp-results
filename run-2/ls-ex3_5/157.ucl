@@ -1,3 +1,13 @@
+/*
+A major use of energy worldwide is in heating, ventilation, and air conditioning (HVAC) systems. Model a thermostat with hysteresis, which regulates temperature to maintain a setpoint, or target temperature.
+
+It should have a state for heating and cooling. Suppose the setpoint is 20 degrees Celsius. If the heater is on, then the thermostat allows the temperature to rise past the setpoint to 22 degrees. If the heater is off, then it allows the temperature to drop past the setpoint to 18 degrees.
+
+There is a single input temperature with type real and two pure outputs heatOn and heatOff. These outputs will be present only when a change in the status of the heater is needed (i.e., when it is on and needs to be turned off, or when it is off and needs to be turned on).
+
+Use the variable names temp, heatOn and heatOff.
+*/
+
 module Thermostat {
   input temp: real;
 
@@ -6,30 +16,17 @@ module Thermostat {
 
   next {
     if (temp > 22.0) {
-      heatOn' = true; //34
-      heatOff' = false; //38
+      heatOn' = true; 
+      heatOff' = false; 
     } else {
       if (temp < 18.0) {
-        heatOn' = false; //49
-        heatOff' = true; //53
+        heatOn' = false; 
+        heatOff' = true; 
       } else {
-        heatOn' = false; //58
-        heatOff' = false; //62
+        heatOn' = false; 
+        heatOff' = false; 
       }
     }
 
-  }
-  invariant temp_inv : ((temp >= 18.0) && (temp <= 22.0));
-  invariant heatOn_inv : ((temp < 18.0) ==> heatOn);
-  invariant heatOff_inv : ((temp > 22.0) ==> heatOff);
-  invariant temp_inv : (!heatOn && !heatOff);
-  invariant heatOn_inv : ((temp > 22.0) ==> !heatOn);
-  invariant heatOff_inv : ((temp < 18.0) ==> !heatOff);
-
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

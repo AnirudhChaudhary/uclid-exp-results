@@ -1,3 +1,11 @@
+/*
+Model the following feature for an automobile:
+
+Once the engine is started, a beeper is sounded and a red light warning is indicated if there are passengers that have not buckled their seat belt. The beeper stops sounding after 30 seconds, or as soon the seat belts are buckled, whichever is sooner. The warning light is on all the time the seat belt is un-buckled. Hint: Assume the sensors provide a warn event when the ignition is turned on and there is a seat with passenger not buckled in, or if the ignition is already on and a passenger sits in a seat without buckling the seatbelt. Assume further that the sensors provide a noWarn event when a passenger departs from a seat, or when the buckle is buckled, or when the ignition is turned off.
+
+Use the variable names warn, nowarn, time, ignitian and bucked.
+*/
+
 module Module {
   var buckled: [integer]boolean;
   var ignition: boolean;
@@ -13,8 +21,8 @@ module Module {
   input nowarn_event: boolean;
 
   init {
-    sound_beeper = false; //71
-    red_light = false; //75
+    sound_beeper = false; 
+    red_light = false; 
 
   }
   procedure step()
@@ -23,39 +31,32 @@ module Module {
     modifies time;
   {
     if ((warn_event && passenger_seated[warn]) && !seat_belt_buckled[warn]) {
-      sound_beeper = true; //97
-      red_light = true; //101
-      time = 0; //105
+      sound_beeper = true; 
+      red_light = true; 
+      time = 0; 
     }
     if (ignition && !buckled[nowarn]) {
       if (time < 30) {
-        time = (time + 1); //130
+        time = (time + 1); 
       } else {
-        sound_beeper = false; //135
+        sound_beeper = false; 
       }
       if (!seat_belt_buckled[nowarn]) {
-        red_light = true; //147
+        red_light = true; 
       }
     }
     if (nowarn_event) {
       if (buckled[nowarn]) {
-        sound_beeper = false; //164
-        red_light = false; //168
+        sound_beeper = false; 
+        red_light = false; 
       }
       if (!passenger_seated[nowarn]) {
-        red_light = false; //181
+        red_light = false; 
       }
     }
   }
 
   next {
     call step();
-  }
-  invariant spec: true;
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
   }
 }

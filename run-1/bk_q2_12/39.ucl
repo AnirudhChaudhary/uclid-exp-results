@@ -24,7 +24,7 @@ module LeaderElection {
   input channel: [id]m;
 
   next {
-    round' = (round + 1bv8); //46
+    round' = (round + 1bv8); 
 
   }
 }

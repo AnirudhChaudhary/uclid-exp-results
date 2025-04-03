@@ -24,8 +24,8 @@ module Inc {
   var y: integer;
 
   next {
-    x' = (x + 1); //48
-    y' = (y + 1); //55
+    x' = (x + 1); 
+    y' = (y + 1); 
 
   }
 }
@@ -33,7 +33,7 @@ module Dec {
   var x: integer;
 
   next {
-    x' = (x - 1); //80
+    x' = (x - 1); 
 
   }
 }
@@ -42,16 +42,10 @@ module Reset {
 
   next {
     if (x == 200) {
-      x' = 0; //108
+      x' = 0; 
     }
 
   }
   invariant x_inv : ((x >= 0) && (x <= 200));
 
-  control  {
-    v = bmc(3);
-    check;
-    print_results;
-    v.print_cex();
-  }
 }
