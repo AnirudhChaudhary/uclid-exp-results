@@ -1,3 +1,4 @@
+/*
 Regard the program graph for the instructions A and B of the parallel program below, 
 where action A is on the left of the ||| and action B is on the right:
 
@@ -9,6 +10,7 @@ Build a model of this transition system, with a shared variable and two actions 
 act on the same shared variable x.
 
 Use the variable name x.
+*/
 
 module Module {
   var action: enum { A };
