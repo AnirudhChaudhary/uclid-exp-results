@@ -1,0 +1,82 @@
+/*
+Consider a system essentially consisting of a sender S and a receiver R that communicate 
+with each other over channels c and d. The receiver sends messages to the sender via channel d,
+ and the sender sends messages to the receiver via channel c.
+
+It is assumed that both channels have an unlimited buffer.
+Channel c is unreliable in the sense that data may get lost when being transmitted from the sender S to channel c.
+ Once messages are stored in the buffer of channel c, they are neither corrupted nor lost. 
+ Channel d is assumed to be perfect.
+The goal is to design a communication protocol that ensures any distinct transmitted datum by S to be delivered to R.
+To ensure this in the presence of possible message losses, sender S resorts to retransmissions.
+
+Messages are transmitted one by one, i.e., S starts sending a new message once the transmission of the 
+previous message has been successful. This is a simple flow control principle, known as "send-and-wait".
+
+Each message m from S is sent with a control bit b, and when R receives this, 
+it sends an acknowledgement consisting of the control bit it just received. 
+On receipt of the acknowledgement, S sends a new message with the negation of the control bit. 
+ If S has to wait too long for the acknowledgement, it times out and retransmits the original message and control bit.
+
+Build a model of this system, using submodules for S and R.
+
+Use the variable names c, d, S, R, m and b
+*/
+
+module Sender {
+  var b: boolean;
+  var m: boolean;
+  var receive_ack: boolean;
+  var send: boolean;
+  var ack: boolean;
+
+  init {
+    b = false;
+    m = false;
+    receive_ack = false;
+    send = false;
+    ack = false;
+
+  }
+}
+module Receiver {
+  var ack_received: boolean;
+  var receive: boolean;
+  var send_ack: boolean;
+
+  init {
+    ack_received = false;
+    receive = false;
+    send_ack = false;
+
+  }
+}
+module Module {
+  type Bit = boolean;
+
+  var s: record { ??: Bit, ??: Bit };
+  var b: Bit;
+  var m: Bit;
+  var S_send: Bit;
+  var S_receive_ack: Bit;
+  var R_receive: Bit;
+  var R_ack_received: Bit;
+
+  instance S: Sender();
+  instance R: Receiver();
+
+  init {
+    S.ack = false;
+    S.receive_ack = false;
+    S.send = false;
+    R.ack_received = false;
+    R.receive = false;
+    R.send_ack = false;
+
+  }
+  next {
+    S.ack' = !S.ack;
+    R.ack_received' = !R.ack_received;
+
+  }
+}

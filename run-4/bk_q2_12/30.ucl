@@ -1,0 +1,60 @@
+/*
+Consider the following leader election algorithm: 
+For n ∈ N, n processes P1,...,Pn are located in a ring topology where each process is
+ connected by an unidirectional channel to its neighbor in a clockwise manner.
+
+To distinguish the processes, each process is assigned a unique identifier id  in {1, . . . , n}.
+ The aim is to elect the process with the highest identifier as the leader within the ring. 
+ Therefore each process executes the following algorithm:
+
+send (id);
+while (true) do
+receive (m);
+if (m = id) then stop;
+if (m > id) then send (m);
+od
+
+Model the leader election protocol for n processes as a channel system.
+
+Use the variable names m, id
+*/
+
+module LeaderElection {
+  type Id = bv32;
+
+  var m: bv32;
+  var done: bv1;
+  var send: [bv32]bv32;
+  var n: bv32;
+  var id: Id;
+
+  input receive: [bv32]bv32;
+
+  init {
+    m = 0bv32;
+    done = 0bv1;
+    n = 60bv32;
+    id = 67bv32;
+
+  }
+  procedure step()
+    modifies m;
+    modifies send;
+    modifies done;
+  {
+    if (done == 0bv1) {
+      send = send[m -> id];
+    }
+    if (m == id) {
+      done = 1bv1;
+    }
+    if (m > id) {
+      send = send[id -> m];
+    }
+    m = receive[id];
+  }
+
+  next {
+    call step();
+  }
+}

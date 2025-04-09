@@ -1,0 +1,68 @@
+/*
+Consider the intersection of two one-way streets, called Main and Secondary.
+A light on each street controls its traffic. 
+Each light goes through a cycle consisting of a red (R), green (G), and yellow (Y) phases.
+
+It is a safety requirement that when one light is in its green or yellow phase, the other is in its red phase.
+ The yellow phase is always 5 seconds long.
+
+The traffic lights operate as follows.
+A sensor in the secondary road detects a vehicle. 
+While no vehicle is detected, there is a 4 minute-long cycle with the main light having 3 minutes of green, 5 seconds of yellow, and 55 seconds of red.
+
+The secondary light is red for 3 minutes and 5 seconds (while the main light is green and yellow), green for 50 seconds, then yellow for 5 seconds.
+
+If a vehicle is detected on the secondary road, the traffic light quickly gives a right of way to the secondary road. 
+  When this happens, the main light aborts its green phase and immediately switches to its 5 second yellow phase. 
+
+If the vehicle is detected while the main light is yellow or red, the system continues as if there were no vehicle.
+
+Model a system that controls the lights. 
+Let this system have six pure outputs, 
+one for each light, named mG, mY, and mR, to designate the main light being green, yellow, or red, respectively, and
+ sG, sY, and sR, to designate the secondary light being green, yellow, or red, respectively. 
+These signals should be generated to turn on a light. You can implicitly assume that when one light is turned on, whichever has been on is turned off.
+
+Use the variable names mG, mY, mR, sG, sY, sR.
+*/
+
+module TrafficLights {
+  var inf: integer;
+  var mG: integer;
+  var mR: integer;
+  var mY: integer;
+  var sG: integer;
+  var sR: integer;
+  var sY: integer;
+  var main_phase: integer;
+  var secondary_phase: integer;
+
+  init {
+    main_phase = 0;
+    secondary_phase = 0;
+
+  }
+  next {
+    if ((secondary_phase == inf) || (main_phase < 180)) {
+      main_phase' = (main_phase + 1);
+    } else {
+      main_phase' = 0;
+    }
+    if ((secondary_phase == inf) || (secondary_phase < 185)) {
+      secondary_phase' = (secondary_phase + 1);
+    } else {
+      secondary_phase' = 0;
+    }
+    if ((secondary_phase == inf) || (secondary_phase < 185)) {
+      mG' = (if ((main_phase >= 0) && (main_phase < 180)) then 1 else 0);
+      mY' = (if ((main_phase >= 180) && (main_phase < 185)) then 1 else 0);
+      mR' = (if (main_phase >= 185) then 1 else 0);
+    }
+    if ((secondary_phase == inf) || (secondary_phase < 185)) {
+      sG' = (if ((secondary_phase >= 0) && (secondary_phase < 180)) then 1 else 0);
+      sY' = (if ((secondary_phase >= 180) && (secondary_phase < 185)) then 1 else 0);
+      sR' = (if (secondary_phase >= 185) then 1 else 0);
+    }
+
+  }
+}

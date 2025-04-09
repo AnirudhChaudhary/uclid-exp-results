@@ -1,0 +1,26 @@
+/*
+Model a single traffic light as a simple transition system with two states, 
+one state modeling a red light, the other one modeling a green light.
+
+Use the variable names red and green
+*/
+
+module TrafficLight {
+  var green_next: boolean;
+  var red_next: boolean;
+  var red: boolean;
+  var green: boolean;
+
+  init {
+    red = true;
+    green = true;
+
+  }
+  next {
+    red_next' = (green && (red || !green));
+    green_next' = (red && (green || !red));
+    red' = red_next;
+    green' = green_next;
+
+  }
+}

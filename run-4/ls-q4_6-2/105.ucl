@@ -1,0 +1,45 @@
+/*
+Model the following feature for an automobile:
+
+Once the engine is started, a beeper is sounded and a red light warning is indicated 
+if there are passengers that have not buckled their seat belt. 
+The beeper stops sounding after 30 seconds, or as soon the seat belts are buckled, whichever is sooner.
+ The warning light is on all the time the seat belt is un-buckled. 
+
+Hint: Assume the sensors provide a warn event when the ignition is turned on and there is a seat with passenger not buckled in,
+ or if the ignition is already on and a passenger sits in a seat without buckling the seatbelt.
+
+Assume further that the sensors provide a noWarn event when a passenger departs from a seat, or
+   when the buckle is buckled, or when the ignition is turned off.
+
+Use the variable names warn, nowarn, time, ignitian and bucked.
+*/
+
+module Automobile {
+  var buckled: boolean;
+  var ignition: bv2;
+  var ignition_off: boolean;
+  var ignition_on: boolean;
+  var nowarn: boolean;
+  var passengers_buckled: boolean;
+  var passengers_unbuckled: boolean;
+  var time: integer;
+  var time_limit: boolean;
+  var warn: boolean;
+
+  init {
+    time = 0;
+    warn = false;
+    nowarn = false;
+    ignition = 0bv2;
+    buckled = false;
+
+  }
+  next {
+    ignition_on' = (ignition > 0bv2);
+    ignition_off' = !ignition_on;
+    time_limit' = (time >= 30);
+    time' = (if (time_limit) then 0 else (time + 1));
+
+  }
+}

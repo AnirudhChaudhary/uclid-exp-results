@@ -1,0 +1,19 @@
+module EventCounter {
+  var threshold: integer;
+  var temp: integer;
+  var count: integer;
+
+  init {
+    threshold = 28;
+    temp = 26;
+    count = 30;
+
+  }
+  next {
+    threshold' = 36;
+    if (temp > threshold) {
+      count' = (count + 1);
+    }
+
+  }
+}

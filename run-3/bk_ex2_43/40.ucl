@@ -1,0 +1,40 @@
+/*
+Let C1 be a circuit without input variables and with output variable y1 and register r1.
+The control function for the output variable transition is y1'=r1, i.e., 
+on the next step y1 is equal to the value of r1 from the previous step. 
+The control function for the register variable transition is r1' = !r1.
+
+Circuit C2 has input variable x2, output variable y2, and register variable r2 with the
+control functions:
+y2'= x2' OR r2
+r2'=x2' OR r2
+
+Model the synchronous composition of these two circuits.
+
+Use the variable names y1, r1, x2, y2, and r2
+*/
+
+module Composition {
+  type T = boolean;
+
+  var r1: T;
+  var r2: T;
+
+  input x2: T;
+
+  output y1: T;
+  output y2: T;
+
+  init {
+    r1 = false;
+    r2 = x2;
+
+  }
+  next {
+    y1' = r1;
+    r1' = !r1;
+    y2' = (x2 || r2);
+    r2' = (x2 || r2);
+
+  }
+}

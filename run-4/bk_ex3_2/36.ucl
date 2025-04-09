@@ -1,0 +1,87 @@
+/*
+Build a model for the classic dining philosophers problem:
+
+Five philosophers are sitting at a round table with a bowl of rice in the middle.
+ For the philosophers (being a little unworldly) life consists of thinking and eating
+  (and waiting, as we will see). 
+  To take some rice out of the bowl, a philosopher needs two chopsticks.
+   In between two neighboring philosophers, however, there is only a single chopstick.
+    Thus, at any time only one of two neighboring philosophers can eat. 
+    Of course, the use of the chopsticks is exclusive and eating with hands is forbidden.
+
+
+Write a property that checks whether deadlock is possible.
+
+Use the variable names phil1, phil2, phil3, phil4, phil5, chopstick1, chopstick2, chopstick3, chopstick4, and chopstick5
+*/
+
+module DiningPhilosophers {
+  type Range = bv1;
+
+  var chopstick1: bv1;
+  var chopstick2: bv1;
+  var chopstick3: bv1;
+  var chopstick4: bv1;
+  var chopstick5: bv1;
+  var phil1: Range;
+  var phil2: Range;
+  var phil3: Range;
+  var phil4: Range;
+  var phil5: Range;
+  var temp1: Range;
+  var temp2: Range;
+  var temp3: Range;
+  var temp4: Range;
+  var temp5: Range;
+
+  init {
+    phil1 = 1bv1;
+    phil2 = 1bv1;
+    phil3 = 1bv1;
+    phil4 = 1bv1;
+    phil5 = 1bv1;
+    chopstick1 = 0bv1;
+    chopstick2 = 0bv1;
+    chopstick3 = 0bv1;
+    chopstick4 = 0bv1;
+    chopstick5 = 0bv1;
+
+  }
+  next {
+    if ((phil1 == 1bv1) && (phil2 == 1bv1)) {
+      chopstick1' = 1bv1;
+      chopstick2' = 1bv1;
+    } else {
+      if ((phil2 == 1bv1) && (phil3 == 1bv1)) {
+        chopstick2' = 1bv1;
+        chopstick3' = 1bv1;
+      } else {
+        if ((phil3 == 1bv1) && (phil4 == 1bv1)) {
+          chopstick3' = 1bv1;
+          chopstick4' = 1bv1;
+        } else {
+          if ((phil4 == 1bv1) && (phil5 == 1bv1)) {
+            chopstick4' = 1bv1;
+            chopstick5' = 1bv1;
+          } else {
+            if ((phil5 == 1bv1) && (phil1 == 1bv1)) {
+              chopstick5' = 1bv1;
+              chopstick1' = 1bv1;
+            }
+          }
+        }
+      }
+    }
+    temp1' = phil1;
+    temp2' = phil2;
+    temp3' = phil3;
+    temp4' = phil4;
+    temp5' = phil5;
+    phil1' = temp1;
+    phil2' = temp2;
+    phil3' = temp3;
+    phil4' = temp4;
+    phil5' = temp5;
+
+  }
+}

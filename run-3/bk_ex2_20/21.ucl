@@ -1,0 +1,25 @@
+Regard the program graph for the instructions A and B of the parallel program below, 
+where action A is on the left of the ||| and action B is on the right:
+
+x:=2*x ||| x:=x+1
+
+We assume that initially x=3.
+
+Build a model of this transition system, with a shared variable and two actions that 
+act on the same shared variable x.
+
+Use the variable name x.
+
+module Module {
+  var action: enum { A };
+  var x: bv8;
+
+  init {
+    x = 3bv8;
+
+  }
+  next {
+    x' = (if (action == A) then (2bv8 * x) else (x + 1bv8));
+
+  }
+}

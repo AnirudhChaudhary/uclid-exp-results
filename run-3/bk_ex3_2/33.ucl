@@ -1,0 +1,55 @@
+/*
+Build a model for the classic dining philosophers problem:
+
+Five philosophers are sitting at a round table with a bowl of rice in the middle.
+ For the philosophers (being a little unworldly) life consists of thinking and eating
+  (and waiting, as we will see). 
+  To take some rice out of the bowl, a philosopher needs two chopsticks.
+   In between two neighboring philosophers, however, there is only a single chopstick.
+    Thus, at any time only one of two neighboring philosophers can eat. 
+    Of course, the use of the chopsticks is exclusive and eating with hands is forbidden.
+
+
+Write a property that checks whether deadlock is possible.
+
+Use the variable names phil1, phil2, phil3, phil4, phil5, chopstick1, chopstick2, chopstick3, chopstick4, and chopstick5
+*/
+module Philosopher {
+  var chopstick1: boolean;
+  var chopstick2: boolean;
+  var chopstick3: boolean;
+  var chopstick4: boolean;
+  var chopstick5: boolean;
+  var phil1: boolean;
+  var phil2: boolean;
+  var phil3: boolean;
+  var phil4: boolean;
+  var phil5: boolean;
+
+  init {
+    phil1 = false;
+    phil2 = false;
+    phil3 = false;
+    phil4 = false;
+    phil5 = false;
+    chopstick1 = false;
+    chopstick2 = false;
+    chopstick3 = false;
+    chopstick4 = false;
+    chopstick5 = false;
+
+  }
+  next {
+    phil1' = (if (phil1 && phil2) then false else phil1);
+    phil2' = (if (phil2 && phil3) then false else phil2);
+    phil3' = (if (phil3 && phil4) then false else phil3);
+    phil4' = (if (phil4 && phil5) then false else phil4);
+    phil5' = (if (phil5 && phil1) then false else phil5);
+    chopstick1' = (if ((phil1 && phil2) || (phil5 && phil1)) then true else chopstick1);
+    chopstick2' = (if ((phil2 && phil3) || (phil1 && phil2)) then true else chopstick2);
+    chopstick3' = (if ((phil3 && phil4) || (phil2 && phil3)) then true else chopstick3);
+    chopstick4' = (if ((phil4 && phil5) || (phil3 && phil4)) then true else chopstick4);
+    chopstick5' = (if ((phil5 && phil1) || (phil4 && phil5)) then true else chopstick5);
+
+  }
+}

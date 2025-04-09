@@ -1,0 +1,70 @@
+/*
+The following program is a mutual exclusion protocol for two processes due to Pnueli. 
+There is a single shared variable s which is either 0 or 1, and initially 1. 
+Besides, each process has a local Boolean variable y that initially equals 0. 
+The program text for each process Pi (i=0,1) is as follows:
+
+l0: loop forever do begin
+l1: Noncritical section
+l2: (yi, s) := (1, i);
+l3: wait until ((y1−i = 0) ∨ (s ̸= i)); l4: Critical section
+l5: yi := 0
+end.
+
+Here, the statement (yi, s) := (1, i); is a multiple assignment in which variable yi := 1 and s := i is a single, atomic step.
+
+Model a parallel composition of P0 and P1.
+
+Write a property that checks whether the algorithm ensures mutual exclusion and 
+a property that checks whether the algorithm ensures starvation freedom.
+
+Use the variable names given in the text.
+*/
+
+module MutualExclusion {
+  var instance_index: bv1;
+  var wait_condition: boolean;
+  var y0: bv1;
+  var y1: bv1;
+  var s: bv1;
+
+  instance p0: P0();
+  instance p1: P1();
+
+  init {
+    instance_index = 1bv1;
+    wait_condition = true;
+    s = 1bv1;
+
+  }
+  next {
+    wait_condition' = ??;
+    y0' = instance_index;
+    s' = (if (y1 != instance_index) then instance_index else s);
+
+  }
+}
+module P0 {
+  var y: bv1;
+
+  init {
+    y = 0bv1;
+
+  }
+  next {
+    y' = (if (y != 0bv1) then y else y);
+
+  }
+}
+module P1 {
+  var y: bv1;
+
+  init {
+    y = 0bv1;
+
+  }
+  next {
+    y' = (if (y != 0bv1) then y else y);
+
+  }
+}

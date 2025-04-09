@@ -1,0 +1,65 @@
+/*
+The alternating bit protocol (ABP) is a protocol for transmitting messages along a 'lossy line,'
+i.e., a line which may lose or duplicate messages.
+ The protocol guarantees that, providing the line doesn't lose infinitely many messages, communication
+  between the sender and the receiver will be successful. 
+  (We allow the line to lose or duplicate messages, but it may not corrupt messages; however,
+   there is no way of guaranteeing successful transmission along a line which can corrupt.)
+
+The ABP works as follows. There are four entities, or agents: the sender, the receiver, the message channel
+ and the acknowledgement channel. The sender transmits the first part of the message together with the 'control' bit 0.
+  If, and when, the receiver receives a message with the control bit 0, it sends 0 along the acknowledgement channel.
+   When the sender receives this acknowledgement, it sends the next packet with the control bit 1. 
+   If and when the receiver receives this, it acknowledges by sending a 1 on the acknowledgement channel.
+    By alternating the control bit, both receiver and sender can guard against duplicating messages and losing messages
+     (i.e., they ignore messages that have the unexpected control bit).
+If the sender doesn't get the expected acknowledgement, it continually re-sends the message, 
+until the acknowledgement arrives. If the receiver doesn't get a message with the expected control bit,
+ it continually resends the previous acknowledgement.
+
+Write a model for the alternating bit protocol. 
+Write a set of properties that check that your model behaves as described above.
+
+Use the variable names st, message1, message2 and ack.
+*/
+
+module Module {
+  type Bit = integer;
+
+  var st: integer;
+  var sender_control: Bit;
+  var receiver_control: Bit;
+  var sent_message1: Bit;
+  var sent_message2: Bit;
+
+  input sender_input: Bit;
+  input receiver_input: Bit;
+
+  output sender_output: Bit;
+  output receiver_output: Bit;
+
+  init {
+    st = 0;
+    sender_control = 0;
+    receiver_control = 0;
+
+  }
+  next {
+    if (st == 0) {
+      sender_output' = (1 - sent_message1);
+      if (receiver_input != sender_control) {
+        receiver_output' = receiver_control;
+      } else {
+        st' = 1;
+      }
+    } else {
+      sender_output' = (1 - sent_message2);
+      if (receiver_input != sender_control) {
+        receiver_output' = receiver_control;
+      } else {
+        st' = 0;
+      }
+    }
+
+  }
+}

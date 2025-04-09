@@ -1,0 +1,54 @@
+/*
+Consider a street junction with 4 incoming roads. 
+Each of the 4 roads has a traffic light, which are L1, L2, L3, L4.
+The traffic light has 4 states: green, yellow, red, and amber which happen in that order.
+
+Write a model of this junction with 4 traffic lights, showing a reasonable controller C
+ that switches the green traffic lights in the following order: 
+ L1 and L3 together, then L2, then L4.
+
+Use the variable names L1, L2, L3, L4, green, yellow, red, amber
+*/
+
+module TrafficLights {
+  var L1: integer;
+  var L2: integer;
+  var L3: integer;
+  var L4: integer;
+  var green: integer;
+
+  init {
+    L1 = green;
+    L2 = 52;
+    L3 = green;
+    L4 = 62;
+
+  }
+  next {
+    if ((L1 == green) && (L3 == green)) {
+      L1' = 83;
+      L3' = 88;
+    } else {
+      if ((L1 == 88) && (L3 == 88)) {
+        L1' = 108;
+        L3' = 113;
+        L2' = 118;
+      } else {
+        if ((L1 == 108) && (L3 == 113)) {
+          L1' = 138;
+          L3' = 143;
+        } else {
+          if (L2 == 118) {
+            L2' = 156;
+            L4' = 161;
+          } else {
+            if (L4 == 161) {
+              L4' = 174;
+            }
+          }
+        }
+      }
+    }
+
+  }
+}

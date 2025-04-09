@@ -1,0 +1,36 @@
+/*
+Model a preliminary design of a beverage vending machine. The machine can either deliver beer or soda.
+
+The state space is S = { pay , select , soda , beer }. The set of initial states consists of only one state,
+ i.e., I = { pay }. The (user) action insert coin denotes the insertion of a coin, while the (machine) actions
+  get soda and get beer denote the delivery of soda and beer, respectively.
+
+Use the variable names pay, select, soda and beer.
+
+Write an LTL property that checks that the vending machine only delivers a drink after being provided with a coin.
+ You may introduce auxiliary variables to do this if you need to.
+*/
+
+module VendingMachine {
+  type Str = record { state: Str, pay: boolean, initializer: integer };
+  type Input = boolean;
+  type Variable = record { pay: boolean, pay: boolean, initializer: integer, next_: record {  }, initializer: integer };
+
+  var current_state: Variable;
+  var coin_inserted: Variable;
+
+  input insert_coin: Input;
+  input get_soda: Input;
+  input get_beer: Input;
+
+  init {
+    current_state.initializer = 55;
+    coin_inserted.initializer = 0;
+
+  }
+  next {
+    coin_inserted.next_' = (if (insert_coin) then coin_inserted else coin_inserted);
+    current_state.next_' = (if coin_inserted.next_.pay then current_state else current_state);
+
+  }
+}

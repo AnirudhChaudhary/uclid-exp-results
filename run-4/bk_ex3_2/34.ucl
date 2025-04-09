@@ -1,0 +1,41 @@
+/*
+Build a model for the classic dining philosophers problem:
+
+Five philosophers are sitting at a round table with a bowl of rice in the middle.
+ For the philosophers (being a little unworldly) life consists of thinking and eating
+  (and waiting, as we will see). 
+  To take some rice out of the bowl, a philosopher needs two chopsticks.
+   In between two neighboring philosophers, however, there is only a single chopstick.
+    Thus, at any time only one of two neighboring philosophers can eat. 
+    Of course, the use of the chopsticks is exclusive and eating with hands is forbidden.
+
+
+Write a property that checks whether deadlock is possible.
+
+Use the variable names phil1, phil2, phil3, phil4, phil5, chopstick1, chopstick2, chopstick3, chopstick4, and chopstick5
+*/
+
+module Module {
+  var chopstick1: bv5;
+  var chopstick2: bv5;
+  var chopstick3: bv5;
+  var chopstick4: bv5;
+  var chopstick5: bv5;
+  var phil1: bv15;
+  var phil2: real;
+  var phil3: boolean;
+  var phil4: bv33;
+  var phil5: boolean;
+
+  init {
+    phil1 = 63bv15;
+    phil4 = 83bv33;
+    phil5 = (phil5 == false);
+    chopstick1 = 99bv5;
+    chopstick2 = 107bv5;
+    chopstick3 = 115bv5;
+    chopstick4 = 123bv5;
+    chopstick5 = 131bv5;
+
+  }
+}

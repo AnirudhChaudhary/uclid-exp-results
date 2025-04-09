@@ -1,0 +1,58 @@
+/*
+Model a system that counts the number of cars that enter and leave a parking garage 
+in order to keep track of how many cars are in the garage at any time.
+
+Assume that an ArrivalDetector actor produces an event when a car arrives, and
+ a DepartureDetector actor produces an event when a car departs. 
+The Counter actor keeps a running count, starting from an initial value i. 
+Each time the count changes, it produces an output event that updates a display.
+
+Use the variable names arrival, departure and counter
+*/
+
+module Counter {
+  var arrival: boolean;
+  var departure: boolean;
+  var display: integer;
+
+  next {
+    if (arrival) {
+      counter.counter' = (counter.counter + 1);
+    } else {
+      if (departure) {
+        counter.counter' = (counter.counter - 1);
+      }
+    }
+    display' = counter.counter;
+
+  }
+}
+module ArrivalDetector {
+  var arrival: boolean;
+
+}
+module DepartureDetector {
+  var departure: boolean;
+
+}
+module ParkingGarage {
+  var arrival: boolean;
+  var departure: boolean;
+  var display: integer;
+
+  instance arrivalDetector: ArrivalDetector();
+  instance departureDetector: DepartureDetector();
+  instance counter: Counter();
+
+  next {
+    if (arrival) {
+      counter.counter' = (counter.counter + 1);
+    } else {
+      if (departure) {
+        counter.counter' = (counter.counter - 1);
+      }
+    }
+    display' = counter.counter;
+
+  }
+}

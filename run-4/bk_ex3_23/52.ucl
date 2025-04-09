@@ -1,0 +1,27 @@
+/*
+Model a traffic light with the usual three phases "red", "green", and "yellow".
+
+Add assertions to check the safety property that every red phase is immediately
+ preceded by a yellow phase. You may add auxiliary variables.
+
+Use the variable names red, green, yellow.
+*/
+
+module TrafficLight {
+  var red: boolean;
+  var yellow: boolean;
+  var green: boolean;
+
+  init {
+    red = false;
+    yellow = false;
+    green = true;
+
+  }
+  next {
+    red' = yellow;
+    yellow' = green;
+    green' = !green;
+
+  }
+}

@@ -1,0 +1,40 @@
+/*
+Consider the transition systems of two traffic lights for nonintersecting (i.e., parallel) roads.
+ It is assumed that the traffic lights switch completely independent of each other. 
+ For example, the traffic lights may be controlled by pedestrians who would like to cross the road.
+
+Model a parallel composition of two traffic lights. Model each traffic light as a simple transition
+ system with two states, one state modeling a red light, the other one modeling a green light.
+
+
+In principle, any form of interlocking of the "actions" of the two traffic lights is possible.
+ For instance, in the initial state where both traffic lights are red, there is a non-deterministic 
+ choice between which of the lights turns green. Note that this nondeterminism is descriptive, 
+ and does not model a scheduling problem between the traffic lights (although it may seem so).
+
+Use the variable names red1, green1, red2 and green 2.
+*/
+
+module TrafficLights {
+  type STATE = boolean;
+
+  var red1: STATE;
+  var green1: STATE;
+  var red2: STATE;
+  var green2: STATE;
+
+  init {
+    red1 = false;
+    green1 = true;
+    red2 = false;
+    green2 = false;
+
+  }
+  next {
+    red1' = (if (green2) then green2 else red1);
+    green1' = (if (green2) then green2 else green1);
+    red2' = (if (green1) then green1 else red2);
+    green2' = (if (green1) then green1 else green2);
+
+  }
+}

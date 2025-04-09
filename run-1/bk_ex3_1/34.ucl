@@ -36,6 +36,6 @@ module TrafficLights {
       green2' = !green2; 
       red2' = !red2; 
     }
-
+  invariant spec: (!(green1 && green2) && !(red1 && red2));
   }
 }
