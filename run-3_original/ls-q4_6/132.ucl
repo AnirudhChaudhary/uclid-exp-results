@@ -1,0 +1,34 @@
+/*
+Model the following feature for an automobile:
+
+A dome light that is turned on as soon as any door is opened. 
+It stays on for 30 seconds after all doors are shut.
+
+Use the variable names light_on, door_open, time
+*/
+
+module Module {
+  var light_on: boolean;
+  var light_on_timer: integer;
+
+  input door_opened: boolean;
+
+  init {
+    light_on = false;
+    light_on_timer = 30;
+
+  }
+  next {
+    if (door_opened) {
+      light_on' = true;
+      light_on_timer' = 30;
+    } else {
+      if (light_on_timer > 0) {
+        light_on_timer' = (light_on_timer - 1);
+      } else {
+        light_on' = false;
+      }
+    }
+
+  }
+}

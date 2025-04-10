@@ -6,23 +6,15 @@ Use the variable names temp and count.
 */
 
 module EventCounter {
+  var threshold: real;
+  var temp: real;
   var count: integer;
-  var new_temp: integer;
-  var old_temp: integer;
-  var temp: integer;
-  var threshold: integer;
 
   init {
-    temp = 30;
-    count = 34;
-    new_temp = 38;
-    old_temp = 42;
+    count = 0;
 
   }
   next {
-    old_temp' = temp;
-    temp' = new_temp;
-    threshold' = 20;
     if (temp > threshold) {
       count' = (count + 1);
     }
